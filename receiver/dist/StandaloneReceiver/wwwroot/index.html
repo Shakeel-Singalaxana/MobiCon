@@ -1,0 +1,3870 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#07090e">
+  <title>mobicon-by shakbrotech | Ultimate Multi-Controller & Truckbox Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0c1018;
+      --bg-base: #0c1018;
+      --bg-surface: #151b27;
+      --bg-surface-elevated: #1c2435;
+      --bg-surface-high: #242f44;
+      --bg-surface-sunken: #0e121c;
+      --bg-surface-pressed: #121722;
+
+      --chassis-grad: linear-gradient(165deg, #18202e 0%, #121722 45%, #0b0f16 100%);
+      --panel-bg: #161c28;
+      --panel-border: #283448;
+      --btn-face: #1f2737;
+      --btn-active: #141924;
+      --btn-border: #364662;
+      --accent-blue: #38bdf8;
+      --accent-cyan: #06b6d4;
+      --accent-glow: rgba(56, 189, 248, 0.4);
+
+      /* Claymorphism Dual Shadows & Depressed Insets */
+      --clay-shadow-surface: 8px 12px 28px rgba(0, 0, 0, 0.55), -3px -3px 10px rgba(255, 255, 255, 0.03), inset 1px 1px 2px rgba(255, 255, 255, 0.08), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+      --clay-shadow-button: 4px 6px 14px rgba(0, 0, 0, 0.5), -2px -2px 6px rgba(255, 255, 255, 0.04), inset 1px 1px 2px rgba(255, 255, 255, 0.12), inset -2px -2px 4px rgba(0, 0, 0, 0.35);
+      --clay-shadow-pressed: inset 3px 3px 8px rgba(0, 0, 0, 0.65), inset -2px -2px 5px rgba(255, 255, 255, 0.03);
+      --clay-shadow-sunken: inset 4px 4px 10px rgba(0, 0, 0, 0.75), inset -2px -2px 6px rgba(255, 255, 255, 0.03);
+      --clay-shadow-pill: 3px 4px 12px rgba(0, 0, 0, 0.45), inset 1px 1px 1px rgba(255, 255, 255, 0.1);
+
+      /* Player Slot Colors */
+      --p1-color: #38bdf8;
+      --p2-color: #f43f5e;
+      --p3-color: #10b981;
+      --p4-color: #f59e0b;
+      --active-p-color: var(--p1-color);
+
+      /* PlayStation Colors */
+      --ps-cross: #38bdf8;
+      --ps-circle: #f43f5e;
+      --ps-square: #ec4899;
+      --ps-triangle: #10b981;
+
+      /* Xbox Colors */
+      --xb-a: #10b981;
+      --xb-b: #ef4444;
+      --xb-x: #3b82f6;
+      --xb-y: #f59e0b;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      position: fixed;
+      inset: 0;
+    }
+
+    #app-root {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      padding: env(safe-area-inset-top, 4px) env(safe-area-inset-right, 8px) env(safe-area-inset-bottom, 4px) env(safe-area-inset-left, 8px);
+      background: radial-gradient(circle at 50% 12%, #171d2b 0%, #0c1018 75%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Auto-Landscape & Portrait Overlay */
+    #rotate-overlay {
+      position: fixed;
+      inset: 0;
+      background: #090c12;
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media screen and (orientation: portrait) {
+      #rotate-overlay {
+        display: flex;
+      }
+    }
+
+    .rotate-icon-anim {
+      width: 68px;
+      height: 68px;
+      border: 3.5px solid var(--accent-blue);
+      border-radius: 16px;
+      background: var(--bg-surface-elevated);
+      box-shadow: var(--clay-shadow-button);
+      position: relative;
+      animation: rotate-phone 2s infinite ease-in-out;
+    }
+
+    .rotate-icon-anim::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 4px;
+      background: var(--accent-blue);
+      border-radius: 2px;
+    }
+
+    @keyframes rotate-phone {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      50% {
+        transform: rotate(-90deg);
+      }
+
+      100% {
+        transform: rotate(-90deg);
+      }
+    }
+
+    .rotate-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .rotate-subtitle {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      max-width: 320px;
+      line-height: 1.45;
+    }
+
+    .btn-fullscreen-prompt {
+      margin-top: 10px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      border-radius: 14px;
+      color: #0b0f19;
+      font-size: 13.5px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    /* =========================================================================
+     TOP NOTCH / ISLAND & MUTUALLY EXCLUSIVE TOP HUD BAR (CLAY THEME)
+     ========================================================================= */
+    #top-island {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 20px;
+      padding: 1px 12px;
+      background: rgba(21, 27, 39, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-clay-light);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      z-index: 100;
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, background 0.15s ease;
+      opacity: 0.88;
+      pointer-events: auto;
+    }
+
+    /* When HUD is open, NOTCH IS COMPLETELY HIDDEN */
+    #top-island.hidden {
+      transform: translateX(-50%) translateY(-150%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #top-island:hover {
+      opacity: 1;
+      border-color: var(--active-p-color);
+      background: var(--bg-surface-elevated);
+    }
+
+    .island-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--active-p-color);
+      box-shadow: 0 0 6px var(--active-p-color);
+    }
+
+    .island-slot {
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--active-p-color);
+    }
+
+    .island-sep {
+      font-size: 8px;
+      color: var(--text-dim);
+    }
+
+    .island-mode {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .island-chevron {
+      font-size: 9px;
+      color: var(--accent-blue);
+      margin-left: 1px;
+    }
+
+    /* Top HUD Bar (Drawer / Overlay in Clay Theme) */
+    /* Top HUD Bar (Drawer / Overlay in Clay Theme) */
+    header#top-hud {
+      position: fixed;
+      top: 0;
+      left: 4px;
+      right: 4px;
+      max-width: calc(100vw - 8px);
+      width: calc(100vw - 8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      height: 48px;
+      padding: 2px 10px;
+      background: var(--bg-surface);
+      border-radius: 0 0 18px 18px;
+      border: 1.5px solid var(--border-clay-light);
+      border-top: none;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+      z-index: 150;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    header#top-hud.hud-collapsed {
+      transform: translateY(-120%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    header#top-hud:not(.hud-collapsed) {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .hud-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .hud-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 0 4px;
+    }
+
+    .hud-center::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hud-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .brand-badge {
+      font-size: 11.5px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #38bdf8, #818cf8, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .github-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 10.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7px;
+      border-radius: 8px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-clay);
+      box-shadow: var(--clay-shadow-pill);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .github-link:hover {
+      color: #fff;
+      border-color: var(--accent-blue);
+      background: var(--bg-surface-high);
+    }
+
+    @media (max-width: 860px) {
+      .github-link {
+        display: none;
+      }
+    }
+
+    /* Exclusive Slot Selector in Clay Style */
+    .slot-selector {
+      display: flex;
+      background: var(--bg-surface-sunken);
+      padding: 2px;
+      border-radius: 12px;
+      border: 1px solid var(--border-clay);
+      box-shadow: var(--clay-shadow-sunken);
+      flex-shrink: 0;
+    }
+
+    .slot-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 900;
+      padding: 3px 7px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .slot-btn.active[data-slot="0"] {
+      background: var(--p1-color);
+      color: #000;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    }
+
+    .slot-btn.active[data-slot="1"] {
+      background: var(--p2-color);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+    }
+
+    .slot-btn.active[data-slot="2"] {
+      background: var(--p3-color);
+      color: #000;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+    }
+
+    .slot-btn.active[data-slot="3"] {
+      background: var(--p4-color);
+      color: #000;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+    }
+
+    .slot-btn.occupied:not(.active) {
+      color: #ef4444;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .slot-btn.occupied:not(.active)::after {
+      content: '🔒';
+      font-size: 7px;
+      margin-left: 1px;
+    }
+
+    .layout-picker {
+      display: flex;
+      background: var(--bg-surface-sunken);
+      padding: 2px;
+      border-radius: 12px;
+      border: 1px solid var(--border-clay);
+      box-shadow: var(--clay-shadow-sunken);
+      flex-shrink: 0;
+      gap: 2px;
+    }
+
+    .layout-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .layout-tab.active {
+      background: var(--bg-surface-elevated);
+      color: #fff;
+      box-shadow: var(--clay-shadow-button);
+      border: 1px solid var(--border-clay-light);
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 8px;
+      background: var(--bg-surface-sunken);
+      border: 1px solid var(--border-clay);
+      box-shadow: var(--clay-shadow-sunken);
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 6px #ef4444;
+      transition: all 0.2s ease;
+    }
+
+    .status-dot.connected {
+      background: #10b981;
+      box-shadow: 0 0 7px #10b981;
+    }
+
+    .hud-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-clay-light);
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 9px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      box-shadow: var(--clay-shadow-button);
+      transition: all 0.15s ease;
+      text-decoration: none;
+      white-space: nowrap;
+      min-height: 28px;
+    }
+
+    .hud-btn:hover {
+      background: var(--bg-surface-high);
+    }
+
+    .hud-btn:active {
+      transform: translateY(1px);
+      box-shadow: var(--clay-shadow-pressed);
+    }
+
+    @media (max-width: 680px) {
+      header#top-hud {
+        padding: 2px 6px;
+        gap: 4px;
+      }
+
+      .brand-badge {
+        font-size: 10px;
+      }
+
+      .slot-btn {
+        padding: 2px 5px;
+        font-size: 9px;
+      }
+
+      .layout-tab {
+        padding: 2px 6px;
+        font-size: 9.5px;
+      }
+
+      .hud-btn {
+        padding: 3px 6px;
+        font-size: 10px;
+      }
+
+      .status-pill {
+        padding: 2px 5px;
+        font-size: 9px;
+      }
+    }
+
+    /* Main Workspace / Viewports */
+    #main-viewport {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin-top: 0;
+      overflow: hidden;
+    }
+
+    .controller-layout {
+      position: absolute;
+      inset: 0;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .controller-layout.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Universal Shoulder Bar */
+    .shoulder-bar {
+      position: absolute;
+      top: 6px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 50;
+      pointer-events: auto;
+    }
+
+    .shoulder-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bumper-btn {
+      width: 72px;
+      height: 40px;
+      background: var(--bg-surface-elevated);
+      border: 1.5px solid var(--border-clay-light);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--clay-shadow-button);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .bumper-btn:active,
+    .bumper-btn.pressed {
+      background: var(--bg-surface-pressed);
+      transform: translateY(2px) scale(0.97);
+      border-color: var(--active-p-color);
+      box-shadow: var(--clay-shadow-pressed);
+    }
+
+    .trigger-slider {
+      width: 140px;
+      height: 40px;
+      background: var(--bg-surface-sunken);
+      border: 1.5px solid var(--border-clay);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      box-shadow: var(--clay-shadow-sunken);
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    .trigger-slider.active,
+    .trigger-slider.pressed {
+      border-color: var(--active-p-color);
+      box-shadow: var(--clay-shadow-sunken), 0 0 12px var(--active-p-color);
+    }
+
+    .trigger-slider-track-ribs {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .trigger-slider-track-ribs span {
+      width: 2.5px;
+      height: 15px;
+      background: var(--border-clay);
+      border-radius: 1px;
+    }
+
+    .trigger-slider-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      background: linear-gradient(90deg, #0284c7, var(--active-p-color));
+      border-radius: 10px;
+      pointer-events: none;
+      transition: width 0.03s linear;
+    }
+
+    #fill-r2 {
+      left: auto;
+      right: 0;
+      background: linear-gradient(270deg, #0284c7, var(--active-p-color));
+    }
+
+    .trigger-slider-label {
+      font-size: 11.5px;
+      font-weight: 900;
+      color: var(--text-main);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .trigger-slider-val {
+      font-size: 11.5px;
+      font-weight: 900;
+      color: var(--text-muted);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Center Controls */
+    .center-controls {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      z-index: 40;
+    }
+
+    .system-btns {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .pill-sys-btn {
+      padding: 7px 16px;
+      background: var(--bg-surface-elevated);
+      border: 1.5px solid var(--border-clay-light);
+      border-radius: 14px;
+      font-size: 10.5px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      box-shadow: var(--clay-shadow-button);
+    }
+
+    .pill-sys-btn:active,
+    .pill-sys-btn.pressed {
+      background: var(--bg-surface-pressed);
+      color: #fff;
+      border-color: var(--active-p-color);
+      transform: translateY(2px) scale(0.97);
+      box-shadow: var(--clay-shadow-pressed);
+    }
+
+    .guide-home-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 2px solid var(--border-clay-light);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--clay-shadow-button);
+    }
+
+    .guide-home-btn:active,
+    .guide-home-btn.pressed {
+      border-color: var(--active-p-color);
+      transform: scale(0.94);
+      box-shadow: var(--clay-shadow-pressed), 0 0 16px var(--active-p-color);
+    }
+
+    /* PS Touchpad in Clay Theme */
+    .ps-touchpad {
+      width: 176px;
+      height: 84px;
+      background: var(--bg-surface-sunken);
+      border: 1.5px solid var(--border-clay);
+      border-radius: 16px;
+      box-shadow: var(--clay-shadow-sunken);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      font-weight: 800;
+      position: relative;
+    }
+
+    .ps-touchpad.pressed {
+      border-color: var(--active-p-color);
+      background: var(--bg-surface-pressed);
+    }
+
+    .ps-lightbar {
+      position: absolute;
+      top: 5px;
+      width: 64px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--active-p-color);
+      box-shadow: 0 0 10px var(--active-p-color);
+    }
+
+    /* Thumbsticks in Clay 3D */
+    .stick-container {
+      width: 140px;
+      height: 140px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stick-base {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: var(--bg-surface-sunken);
+      border: 2.5px solid var(--border-clay);
+      box-shadow: var(--clay-shadow-sunken);
+      position: absolute;
+    }
+
+    .stick-cap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 2.5px solid var(--border-clay-light);
+      box-shadow: var(--clay-shadow-button);
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11.5px;
+      font-weight: 900;
+      color: var(--text-muted);
+    }
+
+    .stick-cap:active,
+    .stick-cap.pressed {
+      border-color: var(--active-p-color);
+      box-shadow: var(--clay-shadow-pressed), 0 0 14px var(--active-p-color);
+      color: #fff;
+    }
+
+    /* D-Pad 8-Way (Clay Beveled Buttons) */
+    .dpad-cluster {
+      width: 144px;
+      height: 144px;
+      position: relative;
+    }
+
+    .dpad-btn {
+      position: absolute;
+      width: 46px;
+      height: 46px;
+      background: var(--bg-surface-elevated);
+      border: 1.5px solid var(--border-clay-light);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      box-shadow: var(--clay-shadow-button);
+    }
+
+    .dpad-btn.up {
+      top: 0;
+      left: 49px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .dpad-btn.down {
+      bottom: 0;
+      left: 49px;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .dpad-btn.left {
+      top: 49px;
+      left: 0;
+      border-radius: 12px 0 0 12px;
+    }
+
+    .dpad-btn.right {
+      top: 49px;
+      right: 0;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .dpad-center-cap {
+      position: absolute;
+      top: 49px;
+      left: 49px;
+      width: 46px;
+      height: 46px;
+      background: var(--bg-surface-sunken);
+      pointer-events: none;
+    }
+
+    .dpad-btn:active,
+    .dpad-btn.pressed {
+      background: var(--bg-surface-pressed);
+      border-color: var(--active-p-color);
+      box-shadow: var(--clay-shadow-pressed), 0 0 10px var(--active-p-color);
+    }
+
+    /* Action Buttons Cluster (3D Clay Spheres) */
+    .action-cluster {
+      width: 144px;
+      height: 144px;
+      position: relative;
+    }
+
+    .action-btn {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 2px solid var(--border-clay-light);
+      color: var(--text-main);
+      font-size: 17px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--clay-shadow-button);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .action-btn.btn-top {
+      top: 0;
+      left: 48px;
+    }
+
+    .action-btn.btn-bottom {
+      bottom: 0;
+      left: 48px;
+    }
+
+    .action-btn.btn-left {
+      top: 48px;
+      left: 0;
+    }
+
+    .action-btn.btn-right {
+      top: 48px;
+      right: 0;
+    }
+
+    .action-btn:active,
+    .action-btn.pressed {
+      transform: scale(0.92);
+      box-shadow: var(--clay-shadow-pressed), 0 0 16px currentColor;
+    }
+
+    .ps-cross {
+      color: var(--ps-cross);
+      text-shadow: 0 0 8px var(--ps-cross);
+    }
+
+    .ps-circle {
+      color: var(--ps-circle);
+      text-shadow: 0 0 8px var(--ps-circle);
+    }
+
+    .ps-square {
+      color: var(--ps-square);
+      text-shadow: 0 0 8px var(--ps-square);
+    }
+
+    .ps-triangle {
+      color: var(--ps-triangle);
+      text-shadow: 0 0 8px var(--ps-triangle);
+    }
+
+    .xb-a {
+      color: var(--xb-a);
+      text-shadow: 0 0 8px var(--xb-a);
+    }
+
+    .xb-b {
+      color: var(--xb-b);
+      text-shadow: 0 0 8px var(--xb-b);
+    }
+
+    .xb-x {
+      color: var(--xb-x);
+      text-shadow: 0 0 8px var(--xb-x);
+    }
+
+    .xb-y {
+      color: var(--xb-y);
+      text-shadow: 0 0 8px var(--xb-y);
+    }
+
+    /* =========================================================================
+     1. LOGITECH 1080° STEERING WHEEL & RACING COCKPIT (CLAY THEME)
+     ========================================================================= */
+    #layout-wheel {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      gap: 18px;
+    }
+
+    .pedals-box {
+      display: flex;
+      gap: 14px;
+      height: 90%;
+      align-items: flex-end;
+      padding: 12px 16px;
+      background: var(--bg-surface-sunken);
+      border: 1.5px solid var(--border-clay);
+      border-radius: 20px;
+      box-shadow: var(--clay-shadow-sunken);
+    }
+
+    .pedal-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 62px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .pedal-plate {
+      width: 100%;
+      height: 190px;
+      background: var(--bg-surface-elevated);
+      border: 2px solid var(--border-clay-light);
+      border-radius: 14px 14px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 4px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--clay-shadow-button);
+    }
+
+    .pedal-plate.clutch {
+      height: 160px;
+      width: 52px;
+    }
+
+    .pedal-plate.brake {
+      height: 180px;
+      width: 64px;
+    }
+
+    .pedal-plate.gas {
+      height: 200px;
+      width: 58px;
+    }
+
+    .pedal-indicator {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0%;
+      pointer-events: none;
+      transition: height 0.03s linear;
+    }
+
+    .pedal-plate.gas .pedal-indicator {
+      background: linear-gradient(0deg, #10b981, rgba(16, 185, 129, 0.3));
+    }
+
+    .pedal-plate.brake .pedal-indicator {
+      background: linear-gradient(0deg, #ef4444, rgba(239, 68, 68, 0.3));
+    }
+
+    .pedal-plate.clutch .pedal-indicator {
+      background: linear-gradient(0deg, #f59e0b, rgba(245, 158, 11, 0.3));
+    }
+
+    .pedal-label {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #fff;
+      z-index: 2;
+    }
+
+    .pedal-grips {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .pedal-grip-line {
+      width: 30px;
+      height: 4px;
+      background: var(--border-clay);
+      border-radius: 2px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .wheel-center-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .rpm-led-bar {
+      display: flex;
+      gap: 5px;
+      padding: 6px 12px;
+      background: var(--bg-surface-sunken);
+      border-radius: 12px;
+      border: 1.5px solid var(--border-clay);
+      box-shadow: var(--clay-shadow-sunken);
+    }
+
+    .rpm-led {
+      width: 15px;
+      height: 9px;
+      border-radius: 3px;
+      background: var(--border-clay);
+      transition: background 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .rpm-led.lit-green {
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .rpm-led.lit-amber {
+      background: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b;
+    }
+
+    .rpm-led.lit-red {
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
+    }
+
+    .rpm-led.lit-blue {
+      background: #38bdf8;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+
+    .f1-paddle {
+      position: absolute;
+      top: 55px;
+      width: 50px;
+      height: 114px;
+      background: var(--bg-surface-elevated);
+      border: 2px solid var(--border-clay-light);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: var(--clay-shadow-button);
+      z-index: 5;
+    }
+
+    .f1-paddle.left {
+      left: -24px;
+    }
+
+    .f1-paddle.right {
+      right: -24px;
+    }
+
+    .f1-paddle:active,
+    .f1-paddle.pressed {
+      background: var(--bg-surface-pressed);
+      border-color: var(--active-p-color);
+      box-shadow: var(--clay-shadow-pressed), 0 0 16px var(--active-p-color);
+      transform: scale(0.96);
+    }
+
+    /* 1080° Steering Wheel Component */
+    .wheel-assembly {
+      width: 250px;
+      height: 250px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .wheel-rim {
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 50%, transparent 62%, #141926 63%, #1e2638 82%, #10141f 100%);
+      border: 10px solid #131722;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.9);
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-origin: center center;
+      transition: transform 0.05s linear;
+    }
+
+    .wheel-top-stripe {
+      position: absolute;
+      top: -5px;
+      width: 14px;
+      height: 20px;
+      background: #38bdf8;
+      border-radius: 3px;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+
+    .wheel-center-hub {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 3px solid var(--border-clay-light);
+      box-shadow: var(--clay-shadow-button);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .wheel-horn-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      margin-bottom: 1px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.42);
+      color: var(--accent-cyan);
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.08), 0 4px 10px rgba(0, 0, 0, 0.35);
+      pointer-events: none;
+    }
+
+    .wheel-center-hub:active,
+    .wheel-center-hub.pressed {
+      border-color: var(--active-p-color);
+      box-shadow: var(--clay-shadow-pressed), 0 0 16px var(--active-p-color);
+      transform: scale(0.96);
+    }
+
+    .wheel-logo {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .wheel-spokes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .wheel-spoke {
+      position: absolute;
+      background: var(--border-clay-light);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .spoke-left {
+      top: 50%;
+      left: 0;
+      width: 62px;
+      height: 26px;
+      transform: translateY(-50%);
+    }
+
+    .spoke-right {
+      top: 50%;
+      right: 0;
+      width: 62px;
+      height: 26px;
+      transform: translateY(-50%);
+    }
+
+    .spoke-bottom {
+      bottom: 0;
+      left: 50%;
+      width: 28px;
+      height: 62px;
+      transform: translateX(-50%);
+    }
+
+    .shifter-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: var(--bg-surface-sunken);
+      border: 1.5px solid var(--border-clay);
+      border-radius: 20px;
+      box-shadow: var(--clay-shadow-sunken);
+    }
+
+    .shifter-lcd {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 40px;
+      background: #080a0f;
+      border: 1.5px solid rgba(56, 189, 248, 0.35);
+      border-radius: 10px;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 900;
+      text-shadow: 0 0 10px #38bdf8;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.9);
+    }
+
+    .h-pattern-gate {
+      width: 144px;
+      height: 154px;
+      position: relative;
+      background: var(--bg-surface-sunken);
+      border: 2px solid var(--border-clay);
+      border-radius: 16px;
+      box-shadow: var(--clay-shadow-sunken);
+    }
+
+    .gate-slot-btn {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 1.5px solid var(--border-clay-light);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--clay-shadow-button);
+    }
+
+    .gate-slot-btn.g1 {
+      top: 8px;
+      left: 10px;
+    }
+
+    .gate-slot-btn.g2 {
+      bottom: 8px;
+      left: 10px;
+    }
+
+    .gate-slot-btn.g3 {
+      top: 8px;
+      left: 52px;
+    }
+
+    .gate-slot-btn.g4 {
+      bottom: 8px;
+      left: 52px;
+    }
+
+    .gate-slot-btn.g5 {
+      top: 8px;
+      right: 10px;
+    }
+
+    .gate-slot-btn.g6 {
+      bottom: 8px;
+      right: 10px;
+    }
+
+    .gate-slot-btn.g7 {
+      top: 57px;
+      right: 10px;
+    }
+
+    .gate-slot-btn.active-gear {
+      background: var(--active-p-color);
+      color: #000;
+      box-shadow: 0 0 14px var(--active-p-color);
+      border-color: #fff;
+    }
+
+    .handbrake-btn {
+      width: 126px;
+      height: 44px;
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+      border: 2px solid #fca5a5;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+    }
+
+    .handbrake-btn:active,
+    .handbrake-btn.pressed {
+      background: #991b1b;
+      transform: scale(0.96);
+      box-shadow: 0 0 18px #ef4444;
+    }
+
+    /* =========================================================================
+     TRUCKBOX & CUSTOM DECK ZOOMABLE / 2D DRAGGABLE COCKPIT CANVAS
+     ========================================================================= */
+    #layout-truck,
+    #layout-custom {
+      flex-direction: column;
+      padding: 4px 8px 8px 8px;
+      gap: 6px;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      user-select: none;
+    }
+
+    /* Top Navigation & Viewport Tools Bar */
+    .truckbox-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      flex-shrink: 0;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    /* Category Quick Jump Bar */
+    .truckbox-cat-nav,
+    .custom-deck-nav {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      flex: 1;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .truckbox-cat-nav::-webkit-scrollbar,
+    .custom-deck-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .truckbox-cat-pill,
+    .custom-deck-pill {
+      background: var(--bg-surface-elevated);
+      border: 1.5px solid var(--border-clay-light);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 12px;
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: var(--clay-shadow-button);
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .truckbox-cat-pill.active,
+    .custom-deck-pill.active {
+      background: var(--active-p-color);
+      color: #030712;
+      border-color: #fff;
+      box-shadow: 0 0 12px var(--active-p-color);
+    }
+
+    /* Canvas Viewport Zoom & Fit Controls */
+    .truckbox-canvas-tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-surface-sunken);
+      border: 1.5px solid var(--border-clay);
+      border-radius: 12px;
+      padding: 2px 6px;
+      box-shadow: var(--clay-shadow-sunken);
+      flex-shrink: 0;
+    }
+
+    .canvas-tool-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-clay-light);
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: var(--clay-shadow-button);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.12s ease;
+    }
+
+    .canvas-tool-btn:hover {
+      background: var(--bg-surface-high);
+      border-color: var(--accent-cyan);
+    }
+
+    .canvas-tool-btn:active {
+      transform: scale(0.95);
+    }
+
+    .canvas-zoom-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      min-width: 36px;
+      text-align: center;
+    }
+
+    /* Draggable 2D Viewport Container */
+    .truck-viewport-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at center, rgba(30, 41, 59, 0.4) 0%, rgba(12, 16, 24, 0.95) 100%);
+      border-radius: 18px;
+      border: 1.5px solid var(--border-clay);
+      box-shadow: var(--clay-shadow-sunken);
+      touch-action: none;
+      cursor: grab;
+    }
+
+    .truck-viewport-container.is-dragging {
+      cursor: grabbing;
+    }
+
+    /* 2D Scaled Canvas containing all cockpit grids */
+    .truck-draggable-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+      display: grid;
+      grid-template-columns: repeat(4, 320px);
+      gap: 14px;
+      padding: 16px;
+      will-change: transform;
+      pointer-events: auto;
+    }
+
+    /* Custom Deck Canvas Dynamic Grid */
+    .custom-deck-canvas {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      min-width: 360px;
+    }
+
+    .truck-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-clay-light);
+      border-radius: 18px;
+      box-shadow: var(--clay-shadow-surface);
+      transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .truck-panel.highlighted {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.35), var(--clay-shadow-surface);
+    }
+
+    .truck-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid var(--border-clay);
+      padding-bottom: 8px;
+      margin-bottom: 2px;
+    }
+
+    .truck-panel-title {
+      font-size: 11.5px;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .truck-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .truck-btn {
+      min-height: 56px;
+      background: var(--bg-surface-elevated);
+      border: 1.5px solid var(--border-clay-light);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--text-main);
+      font-size: 10.5px;
+      font-weight: 900;
+      box-shadow: var(--clay-shadow-button);
+      cursor: pointer;
+      text-align: center;
+      padding: 6px 4px;
+      transition: transform 0.1s ease, background 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .truck-btn:active,
+    .truck-btn.pressed {
+      background: var(--bg-surface-pressed);
+      transform: translateY(2px) scale(0.95);
+      border-color: var(--active-p-color);
+      box-shadow: var(--clay-shadow-pressed);
+    }
+
+    .truck-btn.active {
+      border-color: #10b981;
+      background: #0f3320;
+      color: #10b981;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.4), var(--clay-shadow-button);
+    }
+
+    .truck-btn.hazard.active {
+      border-color: #ef4444;
+      background: #3c1414;
+      color: #ef4444;
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.5), var(--clay-shadow-button);
+      animation: pulse-hazard 0.8s infinite;
+    }
+
+    .truck-btn.safety {
+      background: #2a1b0b;
+      border-color: #f59e0b;
+      color: #fbbf24;
+    }
+
+    .truck-btn.safety.active {
+      background: #452a0a;
+      border-color: #fbbf24;
+      color: #fef08a;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
+    }
+
+    .truck-btn.danger {
+      background: #2d0e0e;
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    .truck-btn.danger.active {
+      background: #4c1111;
+      border-color: #f87171;
+      color: #fee2e2;
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.6);
+    }
+
+    .truck-btn.emerald {
+      background: #0d281e;
+      border-color: #10b981;
+      color: #a7f3d0;
+    }
+
+    .truck-btn.cyan {
+      background: #0c2a38;
+      border-color: #38bdf8;
+      color: #bae6fd;
+    }
+
+    .truck-btn.purple {
+      background: #23123d;
+      border-color: #a855f7;
+      color: #e9d5ff;
+    }
+
+    .truck-slider-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface-sunken);
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border-clay);
+      box-shadow: var(--clay-shadow-sunken);
+    }
+
+    @keyframes pulse-hazard {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    /* Mini Radar & Canvas Location Indicator */
+    .canvas-mini-radar {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 108px;
+      height: 64px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      pointer-events: auto;
+      cursor: pointer;
+      overflow: hidden;
+      z-index: 10;
+      transition: opacity 0.2s ease;
+    }
+
+    .canvas-mini-radar:hover {
+      border-color: var(--accent-cyan);
+    }
+
+    .radar-viewport-indicator {
+      position: absolute;
+      border: 2px solid #38bdf8;
+      background: rgba(56, 189, 248, 0.25);
+      border-radius: 4px;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+      pointer-events: none;
+      transition: all 0.04s linear;
+    }
+
+    .radar-pan-hint {
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 8px;
+      font-weight: 800;
+      color: var(--text-dim);
+      letter-spacing: 0.3px;
+      pointer-events: none;
+    }
+
+    /* Modal Dialog for Settings (Clay Card) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 18, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-clay-light);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), var(--clay-shadow-surface);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* Toast Banner (Clay Pill) */
+    #banner-toast {
+      position: fixed;
+      top: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-surface-elevated);
+      border: 1.5px solid var(--accent-blue);
+      padding: 9px 20px;
+      border-radius: 14px;
+      font-size: 12.5px;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75), 0 0 12px rgba(56, 189, 248, 0.3);
+      z-index: 300;
+      display: none;
+      animation: toast-drop 0.3s ease;
+    }
+
+    @keyframes toast-drop {
+      from {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Auto-Landscape Overlay for Mobile Portrait Mode -->
+  <div id="rotate-overlay">
+    <div class="rotate-icon-anim"></div>
+    <div class="rotate-title">Rotate Your Device</div>
+    <div class="rotate-subtitle">mobicon-by shakbrotech is engineered for landscape orientation. Turn your phone
+      sideways or tap below.</div>
+    <button class="btn-fullscreen-prompt" id="btn-force-landscape">⛶ Go Fullscreen & Lock Landscape</button>
+  </div>
+
+  <!-- Notification Banner Toast -->
+  <div id="banner-toast">Notification Message</div>
+
+  <div id="app-root">
+    <!-- TOP TINY NOTCH / ISLAND (Hidden when top HUD is visible!) -->
+    <div id="top-island" title="Tap to toggle Top HUD Menu">
+      <div class="island-dot" id="island-slot-dot"></div>
+      <span class="island-slot" id="island-slot-text">P1</span>
+      <span class="island-sep">•</span>
+      <span class="island-mode" id="island-mode-text">🏎️ 1080° Wheel</span>
+      <span class="island-chevron" id="island-chevron">▼</span>
+    </div>
+
+    <!-- Top Navigation & Status Bar (Drawer / Overlay) -->
+    <header id="top-hud" class="hud-collapsed">
+      <div class="hud-left">
+        <div class="brand-badge">
+          mobicon
+        </div>
+
+
+        <!-- Embedded GitHub Profile Link -->
+        <a href="https://github.com/shakeel-singalaxana" target="_blank" rel="noopener noreferrer" class="github-link"
+          title="by shakbrotech">
+          shakbrotech
+        </a>
+
+        <!-- Exclusive 1-Device-to-1-Slot Selector (P1..P4) -->
+        <div class="slot-selector" title="Claim Exclusive Player Slot">
+          <button class="slot-btn active" data-slot="0">P1</button>
+          <button class="slot-btn" data-slot="1">P2</button>
+          <button class="slot-btn" data-slot="2">P3</button>
+          <button class="slot-btn" data-slot="3">P4</button>
+        </div>
+      </div>
+
+      <!-- Layout Switcher -->
+      <div class="hud-center">
+        <div class="layout-picker">
+          <button class="layout-tab active" data-layout="wheel">🏎️ Wheel</button>
+          <button class="layout-tab" data-layout="playstation">🎮 PlayStation</button>
+          <button class="layout-tab" data-layout="xbox">🟢 Xbox</button>
+          <button class="layout-tab" data-layout="truck">🚛 Truckbox</button>
+          <button class="layout-tab" data-layout="custom">🎛️ Custom</button>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <div class="status-pill">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">Connecting...</span>
+        </div>
+        <button class="hud-btn" id="btn-fullscreen" title="Immersive Fullscreen">⛶</button>
+        <button class="hud-btn" id="btn-settings" title="Settings">🛠️</button>
+        <button class="hud-btn" id="btn-collapse-hud" title="Close Menu">▲</button>
+      </div>
+    </header>
+
+    <!-- Universal Shoulder Bar (Active for Gamepad Layouts) -->
+    <div class="shoulder-bar" id="shoulder-bar" style="display: none;">
+      <div class="shoulder-group">
+        <button class="bumper-btn" id="btn-l1">LB / L1</button>
+        <div class="trigger-slider" id="btn-l2">
+          <div class="trigger-slider-track-ribs"><span></span><span></span><span></span><span></span></div>
+          <div class="trigger-slider-fill" id="fill-l2"></div>
+          <span class="trigger-slider-label" id="label-l2">LT / L2</span>
+          <span class="trigger-slider-val" id="val-l2">0%</span>
+        </div>
+      </div>
+      <div class="shoulder-group">
+        <div class="trigger-slider" id="btn-r2">
+          <div class="trigger-slider-track-ribs"><span></span><span></span><span></span><span></span></div>
+          <div class="trigger-slider-fill" id="fill-r2"></div>
+          <span class="trigger-slider-label" id="label-r2">RT / R2</span>
+          <span class="trigger-slider-val" id="val-r2">0%</span>
+        </div>
+        <button class="bumper-btn" id="btn-r1">RB / R1</button>
+      </div>
+    </div>
+
+    <main id="main-viewport">
+      <!-- =========================================================================
+         1. LOGITECH G29 / 1080° STEERING WHEEL LAYOUT
+         ========================================================================= -->
+      <section class="controller-layout active" id="layout-wheel">
+        <!-- 3 Pedals Box -->
+        <div class="pedals-box">
+          <div class="pedal-column">
+            <div class="pedal-plate clutch" id="pedal-clutch">
+              <span class="pedal-label">CLUTCH</span>
+              <div class="pedal-grips">
+                <div class="pedal-grip-line"></div>
+                <div class="pedal-grip-line"></div>
+              </div>
+              <div class="pedal-indicator" id="fill-clutch"></div>
+            </div>
+          </div>
+          <div class="pedal-column">
+            <div class="pedal-plate brake" id="pedal-brake">
+              <span class="pedal-label">BRAKE</span>
+              <div class="pedal-grips">
+                <div class="pedal-grip-line"></div>
+                <div class="pedal-grip-line"></div>
+                <div class="pedal-grip-line"></div>
+              </div>
+              <div class="pedal-indicator" id="fill-brake"></div>
+            </div>
+          </div>
+          <div class="pedal-column">
+            <div class="pedal-plate gas" id="pedal-gas">
+              <span class="pedal-label">GAS</span>
+              <div class="pedal-grips">
+                <div class="pedal-grip-line"></div>
+                <div class="pedal-grip-line"></div>
+                <div class="pedal-grip-line"></div>
+              </div>
+              <div class="pedal-indicator" id="fill-gas"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center 1080° Steering Wheel Column -->
+        <div class="wheel-center-col">
+          <!-- RPM Shift LED Light Bar -->
+          <div class="rpm-led-bar" id="rpm-bar">
+            <div class="rpm-led" id="rpm-0"></div>
+            <div class="rpm-led" id="rpm-1"></div>
+            <div class="rpm-led" id="rpm-2"></div>
+            <div class="rpm-led" id="rpm-3"></div>
+            <div class="rpm-led" id="rpm-4"></div>
+            <div class="rpm-led" id="rpm-5"></div>
+            <div class="rpm-led" id="rpm-6"></div>
+            <div class="rpm-led" id="rpm-7"></div>
+            <div class="rpm-led" id="rpm-8"></div>
+            <div class="rpm-led" id="rpm-9"></div>
+          </div>
+
+          <!-- F1 Paddle Shifters Behind Rim -->
+          <button class="f1-paddle left" id="paddle-left">◀ DOWN</button>
+          <button class="f1-paddle right" id="paddle-right">UP ▶</button>
+
+          <!-- 1080° Interactive Steering Wheel -->
+          <div class="wheel-assembly" id="wheel-assembly">
+            <div class="wheel-rim" id="wheel-rim">
+              <div class="wheel-top-stripe"></div>
+              <div class="wheel-spokes">
+                <div class="wheel-spoke spoke-left"></div>
+                <div class="wheel-spoke spoke-right"></div>
+                <div class="wheel-spoke spoke-bottom"></div>
+              </div>
+              <div class="wheel-center-hub" id="wheel-horn-pad">
+                <span class="wheel-horn-icon" aria-hidden="true">🔊</span>
+                <div class="wheel-logo">LOGITECH</div>
+                <span style="font-size: 11px; color: var(--accent-blue); font-weight: 900;"
+                  id="wheel-deg-text">0.0°</span>
+                <span style="font-size: 9px; color: var(--text-dim); font-weight: bold;" id="wheel-turns-text">1080°
+                  LOCK</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wheel Quick Buttons -->
+          <div class="system-btns">
+            <button class="pill-sys-btn" id="btn-wheel-share">SHARE</button>
+            <button class="guide-home-btn" id="btn-wheel-guide">PS</button>
+            <button class="pill-sys-btn" id="btn-wheel-options">OPTIONS</button>
+          </div>
+        </div>
+
+        <!-- Right Side: 6-Speed + Reverse Gated H-Shifter & Handbrake -->
+        <div class="shifter-box">
+          <div class="shifter-lcd" id="shifter-lcd">N</div>
+
+          <div class="h-pattern-gate">
+            <button class="gate-slot-btn g1" data-gear="1">1</button>
+            <button class="gate-slot-btn g2" data-gear="2">2</button>
+            <button class="gate-slot-btn g3" data-gear="3">3</button>
+            <button class="gate-slot-btn g4" data-gear="4">4</button>
+            <button class="gate-slot-btn g5" data-gear="5">5</button>
+            <button class="gate-slot-btn g6" data-gear="6">6</button>
+            <button class="gate-slot-btn g7" data-gear="-1">R</button>
+          </div>
+
+          <button class="handbrake-btn" id="btn-handbrake">
+            <span>⚠️ HANDBRAKE</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+         2. SUPER TRUCKBOX (COMPREHENSIVE ALL 7 ETS2/ATS CATEGORIES - ZOOMABLE & DRAGGABLE)
+         ========================================================================= -->
+      <section class="controller-layout" id="layout-truck">
+        <!-- Quick Navigation Category Bar + Canvas View Tools -->
+        <div class="truckbox-top-bar">
+          <div class="truckbox-cat-nav" id="truck-cat-nav">
+            <button class="truckbox-cat-pill active" data-target="cat-all">📋 All Controls</button>
+            <button class="truckbox-cat-pill" data-target="panel-engine">⚙️ 1. Engine</button>
+            <button class="truckbox-cat-pill" data-target="panel-lights">💡 2. Lights</button>
+            <button class="truckbox-cat-pill" data-target="panel-aux">🛑 3. Brakes</button>
+            <button class="truckbox-cat-pill" data-target="panel-cruise">🎯 4. Cruise</button>
+            <button class="truckbox-cat-pill" data-target="panel-cabin">📻 5. Cabin</button>
+            <button class="truckbox-cat-pill" data-target="panel-hud">🔗 6. Trailer</button>
+            <button class="truckbox-cat-pill" data-target="panel-cameras">🎥 7. Cameras</button>
+          </div>
+
+          <div class="truckbox-canvas-tools">
+            <button class="canvas-tool-btn" id="tb-tool-fit" title="Auto-Fit Entire Cockpit to Screen">🔍 Fit
+              Screen</button>
+            <button class="canvas-tool-btn" id="tb-tool-zoom-in" title="Zoom In">➕</button>
+            <button class="canvas-tool-btn" id="tb-tool-zoom-out" title="Zoom Out">➖</button>
+            <button class="canvas-tool-btn" id="tb-tool-reset" title="Reset View (100%)">🎯 100%</button>
+            <span class="canvas-zoom-badge" id="tb-zoom-level">100%</span>
+          </div>
+        </div>
+
+        <!-- 2D Draggable Viewport Container -->
+        <div class="truck-viewport-container" id="truck-viewport">
+          <div class="truck-draggable-canvas" id="truck-canvas">
+            <!-- 1. ENGINE, DRIVING & TRANSMISSION -->
+            <div class="truck-panel" id="panel-engine" data-panel="panel-engine">
+              <div class="truck-panel-header">
+                <span class="truck-panel-title">⚙️ 1. Engine & Transmission</span>
+                <span style="font-size: 10px; color: var(--accent-blue); font-weight: bold;">DRIVE & SHIFT</span>
+              </div>
+
+              <div class="truck-grid">
+                <button class="truck-btn" id="tb-start-engine"><span>⚡</span>START/STOP ENGINE</button>
+                <button class="truck-btn" id="tb-ign-elec"><span>🔑</span>IGNITION ELEC</button>
+                <button class="truck-btn safety" id="tb-parking-brake"><span>🛑</span>HANDBRAKE</button>
+
+                <button class="truck-btn" id="tb-shift-up"><span>⬆️</span>SHIFT UP</button>
+                <button class="truck-btn" id="tb-shift-down"><span>⬇️</span>SHIFT DOWN</button>
+                <button class="truck-btn" id="tb-gearbox-mode"><span>🔄</span>GEARBOX AUTO/SEQ</button>
+
+                <button class="truck-btn" id="tb-shift-d"><span>🅳</span>DRIVE</button>
+                <button class="truck-btn" id="tb-shift-n"><span>🅽</span>NEUTRAL</button>
+                <button class="truck-btn" id="tb-shift-r"><span>🆁</span>REVERSE</button>
+
+                <button class="truck-btn" id="tb-adaptive-trans"><span>⚙️</span>ADAPTIVE TRANS</button>
+                <button class="truck-btn" id="tb-range-toggle"><span>🎚️</span>RANGE HI/LO</button>
+                <button class="truck-btn" id="tb-splitter-toggle"><span>🔀</span>SPLITTER HI/LO</button>
+              </div>
+            </div>
+
+            <!-- 2. LIGHTS & VISIBILITY -->
+            <div class="truck-panel" id="panel-lights" data-panel="panel-lights">
+              <div class="truck-panel-header">
+                <span class="truck-panel-title">💡 2. Lights & Visibility</span>
+                <span style="font-size: 10px; color: #fbbf24; font-weight: bold;">LIGHTS / WIPERS</span>
+              </div>
+
+              <div class="truck-grid">
+                <button class="truck-btn" id="tb-light-mode"><span>💡</span>LIGHTS (OFF/PARK/LOW)</button>
+                <button class="truck-btn" id="tb-high-beam"><span>🔦</span>HIGH BEAMS</button>
+                <button class="truck-btn" id="tb-light-horn"><span>⚡</span>LIGHT HORN/FLASH</button>
+
+                <button class="truck-btn" id="tb-turn-left"><span>⬅️</span>LEFT TURN</button>
+                <button class="truck-btn hazard" id="tb-hazard"><span>⚠️</span>HAZARD LIGHTS</button>
+                <button class="truck-btn" id="tb-turn-right"><span>➡️</span>RIGHT TURN</button>
+
+                <button class="truck-btn" id="tb-beacon"><span>🚨</span>BEACONS</button>
+                <button class="truck-btn" id="tb-wipers-up"><span>🌧️</span>WIPERS + / SPEED</button>
+                <button class="truck-btn" id="tb-wipers-dn"><span>☀️</span>WIPERS - / OFF</button>
+
+                <button class="truck-btn" id="tb-win-l-open"><span>🪟</span>LEFT WIN OPEN</button>
+                <button class="truck-btn" id="tb-win-l-close"><span>🪟</span>LEFT WIN CLOSE</button>
+                <button class="truck-btn" id="tb-win-r-open"><span>🪟</span>RIGHT WIN OPEN</button>
+              </div>
+            </div>
+
+            <!-- 3. AUXILIARY BRAKES, AXLES & SUSPENSION -->
+            <div class="truck-panel" id="panel-aux" data-panel="panel-aux">
+              <div class="truck-panel-header">
+                <span class="truck-panel-title">🛑 3. Auxiliary Brakes & Axles</span>
+                <span style="font-size: 10px; color: #ef4444; font-weight: bold;">RETARDER / AIR</span>
+              </div>
+
+              <div class="truck-grid">
+                <button class="truck-btn" id="tb-eng-brake-toggle"><span>⚡</span>ENGINE BRAKE</button>
+                <button class="truck-btn" id="tb-eng-brake-up"><span>➕</span>ENG BRAKE +</button>
+                <button class="truck-btn" id="tb-eng-brake-dn"><span>➖</span>ENG BRAKE -</button>
+
+                <button class="truck-btn" id="tb-retarder-inc"><span>🎚️</span>RETARDER +</button>
+                <button class="truck-btn" id="tb-retarder-dec"><span>🎚️</span>RETARDER -</button>
+                <button class="truck-btn" id="tb-retarder-auto"><span>🤖</span>AUTO RETARDER</button>
+
+                <button class="truck-btn" id="tb-lift-truck-axle"><span>⬆️</span>TRUCK AXLE LIFT</button>
+                <button class="truck-btn" id="tb-lift-trailer-axle"><span>⬆️</span>TRAILER AXLE LIFT</button>
+                <button class="truck-btn safety" id="tb-diff-lock"><span>🔒</span>DIFF LOCK</button>
+
+                <button class="truck-btn" id="tb-susp-f-up"><span>⏫</span>FRONT SUSP UP</button>
+                <button class="truck-btn" id="tb-susp-f-dn"><span>⏬</span>FRONT SUSP DN</button>
+                <button class="truck-btn" id="tb-susp-reset"><span>🔄</span>SUSPENSION RESET</button>
+              </div>
+            </div>
+
+            <!-- 4. CRUISE CONTROL & DRIVING ASSISTANTS -->
+            <div class="truck-panel" id="panel-cruise" data-panel="panel-cruise">
+              <div class="truck-panel-header">
+                <span class="truck-panel-title">🎯 4. Cruise & Driving Assistants</span>
+                <span style="font-size: 10px; color: #10b981; font-weight: bold;">CRUISE / ASSIST</span>
+              </div>
+
+              <div class="truck-grid">
+                <button class="truck-btn" id="tb-cc-toggle"><span>🎯</span>CRUISE ON/OFF</button>
+                <button class="truck-btn" id="tb-cc-resume"><span>🔄</span>CRUISE RESUME</button>
+                <button class="truck-btn" id="tb-cc-adaptive"><span>📡</span>ADAPTIVE CRUISE</button>
+
+                <button class="truck-btn" id="tb-cc-speed-up"><span>➕</span>CC SPEED +</button>
+                <button class="truck-btn" id="tb-cc-speed-dn"><span>➖</span>CC SPEED -</button>
+                <button class="truck-btn danger" id="tb-emergency-brake"><span>🛑</span>EMERGENCY BRAKE</button>
+
+                <button class="truck-btn" id="tb-lane-mode"><span>🛣️</span>LANE ASSIST MODE</button>
+                <button class="truck-btn" id="tb-lane-keep"><span>📐</span>LANE KEEPING</button>
+                <button class="truck-btn" id="tb-assist-1"><span>1️⃣</span>ASSIST ACTION 1</button>
+              </div>
+            </div>
+
+            <!-- 5. CABIN DISPLAY & AUDIO SYSTEMS -->
+            <div class="truck-panel" id="panel-cabin" data-panel="panel-cabin">
+              <div class="truck-panel-header">
+                <span class="truck-panel-title">📻 5. Cabin & Audio Systems</span>
+                <span style="font-size: 10px; color: #a855f7; font-weight: bold;">DASH / HORN / RADIO</span>
+              </div>
+
+              <div class="truck-grid">
+                <button class="truck-btn" id="tb-dash-mode"><span>🖥️</span>DASHBOARD MODE</button>
+                <button class="truck-btn" id="tb-infotainment-mode"><span>📱</span>INFOTAINMENT</button>
+                <button class="truck-btn" id="tb-trip-reset"><span>🔄</span>TRIP RESET</button>
+
+                <button class="truck-btn" id="tb-city-horn"><span>🔊</span>CITY HORN</button>
+                <button class="truck-btn danger" id="tb-air-horn"><span>📢</span>AIR HORN</button>
+                <button class="truck-btn" id="tb-radio-power"><span>📻</span>RADIO ON/OFF</button>
+
+                <button class="truck-btn" id="tb-vol-up"><span>🔊</span>VOLUME +</button>
+                <button class="truck-btn" id="tb-vol-dn"><span>🔉</span>VOLUME -</button>
+                <button class="truck-btn" id="tb-next-station"><span>⏭️</span>NEXT STATION</button>
+              </div>
+            </div>
+
+            <!-- 6. TRAILER, NAVIGATION & MANAGEMENT (HUD) -->
+            <div class="truck-panel" id="panel-hud" data-panel="panel-hud">
+              <div class="truck-panel-header">
+                <span class="truck-panel-title">🔗 6. Trailer, HUD & Management</span>
+                <span style="font-size: 10px; color: #06b6d4; font-weight: bold;">COUPLING / F-KEYS</span>
+              </div>
+
+              <div class="truck-grid">
+                <button class="truck-btn safety" id="tb-trailer-couple"><span>🔗</span>ATTACH/DETACH TRAILER</button>
+                <button class="truck-btn" id="tb-mirrors-f2"><span>🪞</span>MIRRORS (F2)</button>
+                <button class="truck-btn" id="tb-advisor-f3"><span>🗺️</span>ROUTE ADVISOR (F3)</button>
+
+                <button class="truck-btn" id="tb-truck-menu-f4"><span>🛠️</span>TRUCK MENU (F4)</button>
+                <button class="truck-btn" id="tb-mouse-ctrl"><span>🖱️</span>ADVISOR MOUSE</button>
+                <button class="truck-btn" id="tb-map-zoom-in"><span>🔍</span>MAP ZOOM IN</button>
+
+                <button class="truck-btn" id="tb-map-zoom-out"><span>🔎</span>MAP ZOOM OUT</button>
+                <button class="truck-btn" id="tb-job-info"><span>📄</span>JOB INFO / DAMAGE</button>
+                <button class="truck-btn" id="tb-diagnostics"><span>📊</span>DIAGNOSTICS</button>
+              </div>
+            </div>
+
+            <!-- 7. CAMERAS, VIEWS & CONVOY / MULTIPLAYER -->
+            <div class="truck-panel" id="panel-cameras" data-panel="panel-cameras">
+              <div class="truck-panel-header">
+                <span class="truck-panel-title">🎥 7. Cameras & Convoy / MP</span>
+                <span style="font-size: 10px; color: #f43f5e; font-weight: bold;">VIEWS / CB RADIO</span>
+              </div>
+
+              <div class="truck-grid">
+                <button class="truck-btn" id="tb-cam-1"><span>1️⃣</span>INTERIOR (1)</button>
+                <button class="truck-btn" id="tb-cam-2"><span>2️⃣</span>CHASING (2)</button>
+                <button class="truck-btn" id="tb-cam-3"><span>3️⃣</span>TOP-DOWN (3)</button>
+
+                <button class="truck-btn" id="tb-cam-4"><span>4️⃣</span>ROOF (4)</button>
+                <button class="truck-btn" id="tb-cam-5"><span>5️⃣</span>LEAN OUT (5)</button>
+                <button class="truck-btn" id="tb-cam-6"><span>6️⃣</span>BUMPER (6)</button>
+
+                <button class="truck-btn" id="tb-look-left"><span>👀</span>LOOK LEFT</button>
+                <button class="truck-btn" id="tb-look-fwd"><span>👀</span>LOOK FORWARD</button>
+                <button class="truck-btn" id="tb-look-right"><span>👀</span>LOOK RIGHT</button>
+
+                <button class="truck-btn" id="tb-zoom-interior"><span>🔎</span>ZOOM INTERIOR</button>
+                <button class="truck-btn danger" id="tb-cb-radio"><span>🎙️</span>CB RADIO PTT</button>
+                <button class="truck-btn" id="tb-chat-toggle"><span>💬</span>CHAT / PLAYERS</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Canvas Radar -->
+          <div class="canvas-mini-radar" id="truck-mini-radar" title="Canvas Radar - Click/drag to navigate">
+            <div class="radar-viewport-indicator" id="truck-radar-box"></div>
+            <div class="radar-pan-hint">✋ Drag to Pan</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+         2.5. CUSTOM BUTTON DECK (CONFIGURABLE & ZOOMABLE CANVAS)
+         ========================================================================= -->
+      <section class="controller-layout" id="layout-custom">
+        <div class="truckbox-top-bar">
+          <div class="custom-deck-nav" id="custom-deck-selector-bar">
+            <!-- Dynamically populated deck selector pills -->
+          </div>
+
+          <div class="truckbox-canvas-tools">
+            <button class="canvas-tool-btn" id="custom-tool-fit" title="Auto-Fit Custom Deck to Screen">🔍 Fit
+              Screen</button>
+            <button class="canvas-tool-btn" id="custom-tool-zoom-in" title="Zoom In">➕</button>
+            <button class="canvas-tool-btn" id="custom-tool-zoom-out" title="Zoom Out">➖</button>
+            <button class="canvas-tool-btn" id="custom-tool-reset" title="Reset View (100%)">🎯 100%</button>
+            <span class="canvas-zoom-badge" id="custom-zoom-level">100%</span>
+            <a href="/config.html" target="_blank" class="canvas-tool-btn" style="color: var(--accent-cyan);"
+              title="Edit buttons in Config Hub">✏️ Edit</a>
+          </div>
+        </div>
+
+        <div class="truck-viewport-container" id="custom-viewport">
+          <div class="truck-draggable-canvas custom-deck-canvas" id="custom-canvas">
+            <!-- Dynamically populated custom buttons from config -->
+          </div>
+
+          <div class="canvas-mini-radar" id="custom-mini-radar" title="Canvas Radar">
+            <div class="radar-viewport-indicator" id="custom-radar-box"></div>
+            <div class="radar-pan-hint">✋ Drag to Pan</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+         3. PLAYSTATION DUALSENSE LAYOUT
+         ========================================================================= -->
+      <section class="controller-layout" id="layout-playstation"
+        style="justify-content: space-between; align-items: center; padding: 20px 40px;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+          <div class="dpad-cluster">
+            <button class="dpad-btn up" id="ps-du">▲</button>
+            <button class="dpad-btn down" id="ps-dd">▼</button>
+            <button class="dpad-btn left" id="ps-dl">◀</button>
+            <button class="dpad-btn right" id="ps-dr">▶</button>
+            <div class="dpad-center-cap"></div>
+          </div>
+          <div class="stick-container" id="ps-stick-l-box">
+            <div class="stick-base"></div>
+            <div class="stick-cap" id="ps-stick-l">L3</div>
+          </div>
+        </div>
+
+        <div class="center-controls">
+          <div class="ps-touchpad" id="ps-touchpad">
+            <div class="ps-lightbar"></div>
+            <span>TOUCHPAD</span>
+          </div>
+          <div class="system-btns">
+            <button class="pill-sys-btn" id="ps-btn-create">CREATE</button>
+            <button class="guide-home-btn" id="ps-btn-home">PS</button>
+            <button class="pill-sys-btn" id="ps-btn-options">OPTIONS</button>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+          <div class="action-cluster">
+            <button class="action-btn btn-top ps-triangle" id="ps-btn-triangle">△</button>
+            <button class="action-btn btn-right ps-circle" id="ps-btn-circle">◯</button>
+            <button class="action-btn btn-bottom ps-cross" id="ps-btn-cross">✕</button>
+            <button class="action-btn btn-left ps-square" id="ps-btn-square">◻</button>
+          </div>
+          <div class="stick-container" id="ps-stick-r-box">
+            <div class="stick-base"></div>
+            <div class="stick-cap" id="ps-stick-r">R3</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+         4. XBOX SERIES X|S LAYOUT
+         ========================================================================= -->
+      <section class="controller-layout" id="layout-xbox"
+        style="justify-content: space-between; align-items: center; padding: 20px 40px;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+          <div class="stick-container" id="xb-stick-l-box">
+            <div class="stick-base"></div>
+            <div class="stick-cap" id="xb-stick-l">LS</div>
+          </div>
+          <div class="dpad-cluster">
+            <button class="dpad-btn up" id="xb-du">▲</button>
+            <button class="dpad-btn down" id="xb-dd">▼</button>
+            <button class="dpad-btn left" id="xb-dl">◀</button>
+            <button class="dpad-btn right" id="xb-dr">▶</button>
+            <div class="dpad-center-cap"></div>
+          </div>
+        </div>
+
+        <div class="center-controls">
+          <button class="guide-home-btn" id="xb-btn-guide"
+            style="width: 56px; height: 56px; font-size: 18px;">⭘</button>
+          <div class="system-btns">
+            <button class="pill-sys-btn" id="xb-btn-view">VIEW</button>
+            <button class="pill-sys-btn" id="xb-btn-menu">MENU</button>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+          <div class="action-cluster">
+            <button class="action-btn btn-top xb-y" id="xb-btn-y">Y</button>
+            <button class="action-btn btn-right xb-b" id="xb-btn-b">B</button>
+            <button class="action-btn btn-bottom xb-a" id="xb-btn-a">A</button>
+            <button class="action-btn btn-left xb-x" id="xb-btn-x">X</button>
+          </div>
+          <div class="stick-container" id="xb-stick-r-box">
+            <div class="stick-base"></div>
+            <div class="stick-cap" id="xb-stick-r">RS</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Settings Quick Modal -->
+  <div class="modal-overlay" id="modal-settings">
+    <div class="modal-card">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+        <h3 style="font-weight: 900; color: #fff;">Quick Settings</h3>
+        <a href="/config.html" target="_blank"
+          style="color: var(--accent-blue); font-size: 12px; font-weight: bold; text-decoration: none;">⚙️ Full PC
+          Config Hub</a>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+        <label style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Max Steering Angle:</span>
+          <select id="sel-modal-degrees"
+            style="background: #1e2433; color: #fff; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+            <option value="1080">1080° (Full 3 Turns)</option>
+            <option value="900">900° (G29 Default)</option>
+            <option value="720">720°</option>
+            <option value="540">540°</option>
+            <option value="360">360°</option>
+            <option value="180">180°</option>
+          </select>
+        </label>
+
+        <label style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Steering Sensitivity:</span>
+          <input type="range" id="rng-modal-sens" min="30" max="250" value="100">
+        </label>
+
+        <label style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Haptic Feedback Vibration:</span>
+          <input type="checkbox" id="chk-modal-vibrate" checked style="width: 18px; height: 18px;">
+        </label>
+
+        <label style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Tilt to Steer (Gyro):</span>
+          <input type="checkbox" id="chk-modal-gyro" checked style="width: 18px; height: 18px;">
+        </label>
+      </div>
+
+      <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+        <button class="hud-btn" id="btn-close-settings" style="padding: 8px 16px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      // Generate or retrieve persistent unique Device ID for strict single-player exclusive locking
+      let deviceId = localStorage.getItem('mobicon_device_id');
+      if (!deviceId) {
+        deviceId = 'mob_' + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+        localStorage.setItem('mobicon_device_id', deviceId);
+      }
+      const deviceName = (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'Apple iOS' :
+        /Android/.test(navigator.userAgent) ? 'Android Device' : 'Web Controller');
+
+      // Load Config
+      let config = {
+        maxSteeringDegrees: 1080,
+        steeringSensitivity: 1.0,
+        degreeRatio: 1.0,
+        steeringLinearity: 1.0,
+        steeringDeadzone: 0,
+        returnSpeed: 'realistic',
+        gyroEnabled: true,
+        gyroAngleRange: 35,
+        gyroSmoothing: 0.40,
+        vibrateEnabled: true,
+        vibrateStrength: 100,
+        gasSensitivity: 1.0,
+        brakeSensitivity: 1.0,
+        clutchSensitivity: 1.0
+      };
+      try {
+        const saved = localStorage.getItem('mobicon_config');
+        if (saved) Object.assign(config, JSON.parse(saved));
+      } catch (e) { }
+
+      // Global Controller State
+      const state = {
+        v: 1,
+        p: 0,           // Player Slot (0=P1, 1=P2, 2=P3, 3=P4)
+        deviceId: deviceId,
+        deviceName: deviceName,
+        lx: 0.0,
+        ly: 0.0,
+        rx: 0.0,
+        ry: 0.0,
+        lt: 0.0,
+        rt: 0.0,
+        clutch: 0.0,
+        gear: 0,        // 0=N, 1..12, -1=R
+        ct: 3,          // Controller type: 1=Xbox, 2=PlayStation, 3=Wheel, 4=Truck Button Box
+        b: 0,           // 128-bit Button Bitmask, word 0 (bits 0..31)
+        b1: 0,
+        b2: 0,
+        b3: 0,
+        ext: 0,
+        cmd: null
+      };
+
+      const BUTTONS = {
+        A: 1 << 0, B: 1 << 1, X: 1 << 2, Y: 1 << 3,
+        LB: 1 << 4, RB: 1 << 5,
+        BACK: 1 << 6, START: 1 << 7,
+        L3: 1 << 8, R3: 1 << 9,
+        UP: 1 << 10, DOWN: 1 << 11, LEFT: 1 << 12, RIGHT: 1 << 13,
+        GUIDE: 1 << 14,
+        HORN: 1 << 15, WIPERS: 1 << 16, HIGHBEAMS: 1 << 17, HAZARD: 1 << 18,
+        IGNITION: 1 << 15, HEADLIGHTS: 1 << 16,
+        HANDBRAKE: 1 << 19, SHIFT_UP: 1 << 20, SHIFT_DOWN: 1 << 21,
+        GEAR1: 1 << 22, GEAR2: 1 << 23, GEAR3: 1 << 24, GEAR4: 1 << 25, GEAR5: 1 << 26, GEAR6: 1 << 27, GEAR_REV: 1 << 28,
+        DIFFLOCK: 1 << 29, TRAILER: 1 << 30, CRUISE: 1 << 31
+      };
+
+      let ws = null;
+      let isConnected = false;
+      let activeLayout = 'wheel';
+      let gyroActive = false;
+      let gyroZero = 0;
+
+      function controllerTypeForLayout(layout) {
+        if (layout === 'xbox') return 1;
+        if (layout === 'playstation') return 2;
+        if (layout === 'truck' || layout === 'custom') return 4;
+        return 3;
+      }
+
+      function packetState() {
+        return {
+          ...state,
+          ct: controllerTypeForLayout(activeLayout),
+          b: state.b >>> 0,
+          b1: state.b1 >>> 0,
+          b2: state.b2 >>> 0,
+          b3: state.b3 >>> 0,
+          ext: state.b1 >>> 0
+        };
+      }
+
+      // Sound Synth for mechanical clicks
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      function playClick(freq = 600, duration = 0.035) {
+        try {
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration);
+        } catch (e) { }
+      }
+
+      function showBanner(msg) {
+        const banner = document.getElementById('banner-toast');
+        if (!banner) return;
+        banner.textContent = msg;
+        banner.style.display = 'block';
+        setTimeout(() => { banner.style.display = 'none'; }, 3000);
+      }
+
+      // Fullscreen & Orientation Lock
+      async function toggleFullscreenAndLock() {
+        try {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) await elem.requestFullscreen();
+            else if (elem.webkitRequestFullscreen) await elem.webkitRequestFullscreen();
+            if (screen.orientation && screen.orientation.lock) {
+              try { await screen.orientation.lock('landscape'); } catch (err) { }
+            }
+          } else {
+            if (document.exitFullscreen) await document.exitFullscreen();
+            else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+          }
+        } catch (e) { }
+      }
+
+      document.getElementById('btn-fullscreen').addEventListener('click', toggleFullscreenAndLock);
+      document.getElementById('btn-force-landscape').addEventListener('click', toggleFullscreenAndLock);
+
+      // =========================================================================
+      // NOTCH (ISLAND) & TOP BAR MUTUALLY EXCLUSIVE VISIBILITY
+      // =========================================================================
+      const topIsland = document.getElementById('top-island');
+      const topHud = document.getElementById('top-hud');
+      const btnCollapseHud = document.getElementById('btn-collapse-hud');
+      const islandSlotDot = document.getElementById('island-slot-dot');
+      const islandSlotText = document.getElementById('island-slot-text');
+      const islandModeText = document.getElementById('island-mode-text');
+      let hudTimeout = null;
+
+      const modeNames = {
+        wheel: '🏎️ 1080° Wheel',
+        truck: '🚛 Truckbox',
+        custom: '🎛️ Custom Deck',
+        playstation: '🎮 PlayStation',
+        xbox: '🟢 Xbox'
+      };
+
+      function openHud() {
+        topHud.classList.remove('hud-collapsed');
+        topIsland.classList.add('hidden'); // HIDE NOTCH WHEN BAR IS VISIBLE!
+        resetHudTimeout();
+      }
+
+      function closeHud() {
+        topHud.classList.add('hud-collapsed');
+        topIsland.classList.remove('hidden'); // SHOW NOTCH WHEN BAR IS HIDDEN!
+        if (hudTimeout) {
+          clearTimeout(hudTimeout);
+          hudTimeout = null;
+        }
+      }
+
+      function toggleHud() {
+        if (topHud.classList.contains('hud-collapsed')) {
+          openHud();
+        } else {
+          closeHud();
+        }
+        playClick(600, 0.03);
+        if (navigator.vibrate) navigator.vibrate(10);
+      }
+
+      function resetHudTimeout() {
+        if (hudTimeout) clearTimeout(hudTimeout);
+        hudTimeout = setTimeout(() => {
+          closeHud();
+        }, 6000);
+      }
+
+      topIsland.addEventListener('click', toggleHud);
+      if (btnCollapseHud) btnCollapseHud.addEventListener('click', closeHud);
+      topHud.addEventListener('pointerdown', resetHudTimeout);
+
+      // =========================================================================
+      // WEBSOCKET & EXCLUSIVE PLAYER SLOT LOCKING
+      // =========================================================================
+      function connectWs() {
+        const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        ws = new WebSocket(`${proto}//${location.host}/ws`);
+
+        ws.onopen = () => {
+          isConnected = true;
+          document.getElementById('status-dot').classList.add('connected');
+          document.getElementById('status-text').textContent = `P${state.p + 1} Connected`;
+          // Claim initial slot
+          ws.send(JSON.stringify({
+            type: 'claim_slot',
+            slot: state.p,
+            deviceId: state.deviceId,
+            deviceName: state.deviceName
+          }));
+        };
+
+        ws.onmessage = (e) => {
+          try {
+            const msg = JSON.parse(e.data);
+            if (msg.type === 'slots_status') {
+              handleSlotsStatus(msg.slots);
+            } else if (msg.type === 'slot_assigned') {
+              if (state.p !== msg.slot) {
+                setPlayerSlot(msg.slot, false);
+                showBanner(`Assigned to Player ${msg.slot + 1} (Player ${msg.requested + 1} was occupied by another device)`);
+              }
+            } else if (msg.type === 'rumble') {
+              handleRumble(msg.slot, msg.large, msg.small);
+            }
+          } catch (err) { }
+        };
+
+        ws.onclose = () => {
+          isConnected = false;
+          document.getElementById('status-dot').classList.remove('connected');
+          document.getElementById('status-text').textContent = 'Reconnecting...';
+          setTimeout(connectWs, 1500);
+        };
+      }
+      connectWs();
+
+      function handleSlotsStatus(slots) {
+        if (!slots) return;
+        slots.forEach(s => {
+          const btn = document.querySelector(`.slot-btn[data-slot="${s.slot}"]`);
+          if (!btn) return;
+          if (s.locked && !s.isYou) {
+            btn.classList.add('occupied');
+            btn.title = `Occupied by ${s.deviceName || 'another player'}`;
+          } else {
+            btn.classList.remove('occupied');
+            btn.title = 'Available to claim';
+          }
+        });
+      }
+
+      function handleRumble(slot, large, small) {
+        if (slot !== state.p) return;
+        if (!config.vibrateEnabled) return;
+        const maxVal = Math.max(large, small);
+        if (maxVal > 0 && navigator.vibrate) {
+          const mult = config.vibrateStrength / 100;
+          const ms = Math.round((maxVal / 255) * 120 * mult);
+          navigator.vibrate(ms);
+        }
+      }
+
+      // 60-120 Hz Continuous Transmission Loop
+      setInterval(() => {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify(packetState()));
+        }
+      }, 16);
+
+      // Player Slot Switcher
+      function setPlayerSlot(slotIndex, notifyServer = true) {
+        state.p = slotIndex;
+        document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('active'));
+        const targetBtn = document.querySelector(`.slot-btn[data-slot="${slotIndex}"]`);
+        if (targetBtn) targetBtn.classList.add('active');
+
+        const colors = ['#38bdf8', '#f43f5e', '#10b981', '#f59e0b'];
+        const activeColor = colors[state.p];
+        document.documentElement.style.setProperty('--active-p-color', activeColor);
+        document.getElementById('status-text').textContent = `P${state.p + 1} Connected`;
+        islandSlotText.textContent = `P${state.p + 1}`;
+        islandSlotDot.style.background = activeColor;
+        islandSlotDot.style.boxShadow = `0 0 6px ${activeColor}`;
+
+        if (notifyServer && ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({
+            type: 'claim_slot',
+            slot: state.p,
+            deviceId: state.deviceId,
+            deviceName: state.deviceName
+          }));
+        }
+      }
+
+      document.querySelectorAll('.slot-btn').forEach(btn => {
+        btn.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          const reqSlot = parseInt(btn.dataset.slot, 10);
+          if (btn.classList.contains('occupied') && !btn.classList.contains('active')) {
+            showBanner(`Player ${reqSlot + 1} is currently locked by another device.`);
+            return;
+          }
+          setPlayerSlot(reqSlot, true);
+          playClick(800, 0.05);
+          resetHudTimeout();
+        });
+      });
+
+      // Layout Tab Switcher
+      document.querySelectorAll('.layout-tab').forEach(tab => {
+        tab.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.layout-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          activeLayout = tab.dataset.layout;
+          state.ct = controllerTypeForLayout(activeLayout);
+
+          document.querySelectorAll('.controller-layout').forEach(l => l.classList.remove('active'));
+          const target = document.getElementById(`layout-${activeLayout}`);
+          if (target) target.classList.add('active');
+
+          const shoulderBar = document.getElementById('shoulder-bar');
+          if (activeLayout === 'playstation' || activeLayout === 'xbox') {
+            shoulderBar.style.display = 'flex';
+            const isPs = activeLayout === 'playstation';
+            document.getElementById('btn-l1').textContent = isPs ? 'L1' : 'LB';
+            document.getElementById('btn-r1').textContent = isPs ? 'R1' : 'RB';
+            document.getElementById('label-l2').textContent = isPs ? 'L2' : 'LT';
+            document.getElementById('label-r2').textContent = isPs ? 'R2' : 'RT';
+          } else {
+            shoulderBar.style.display = 'none';
+          }
+
+          islandModeText.textContent = modeNames[activeLayout] || activeLayout;
+          playClick(700, 0.04);
+          resetHudTimeout();
+        });
+      });
+
+      // Helper for button bindings
+      function bindBtn(el, mask, haptic = true) {
+        if (!el) return;
+        const press = (e) => {
+          e.preventDefault();
+          state.b |= mask;
+          el.classList.add('pressed');
+          if (haptic && config.vibrateEnabled && navigator.vibrate) navigator.vibrate(12);
+          playClick(600, 0.03);
+        };
+        const release = (e) => {
+          e.preventDefault();
+          state.b &= ~mask;
+          el.classList.remove('pressed');
+        };
+        el.addEventListener('pointerdown', press);
+        el.addEventListener('pointerup', release);
+        el.addEventListener('pointercancel', release);
+        el.addEventListener('pointerleave', release);
+      }
+
+      function bindToggleBtn(el, mask) {
+        if (!el) return;
+        el.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          state.b ^= mask;
+          el.classList.toggle('active', (state.b & mask) !== 0);
+          playClick(650, 0.04);
+          if (config.vibrateEnabled && navigator.vibrate) navigator.vibrate(15);
+        });
+      }
+
+      // Bind Standard Buttons
+      bindBtn(document.getElementById('btn-l1'), BUTTONS.LB);
+      bindBtn(document.getElementById('btn-r1'), BUTTONS.RB);
+      bindBtn(document.getElementById('ps-du'), BUTTONS.UP);
+      bindBtn(document.getElementById('ps-dd'), BUTTONS.DOWN);
+      bindBtn(document.getElementById('ps-dl'), BUTTONS.LEFT);
+      bindBtn(document.getElementById('ps-dr'), BUTTONS.RIGHT);
+      bindBtn(document.getElementById('ps-btn-cross'), BUTTONS.A);
+      bindBtn(document.getElementById('ps-btn-circle'), BUTTONS.B);
+      bindBtn(document.getElementById('ps-btn-square'), BUTTONS.X);
+      bindBtn(document.getElementById('ps-btn-triangle'), BUTTONS.Y);
+      bindBtn(document.getElementById('ps-btn-home'), BUTTONS.GUIDE);
+      bindBtn(document.getElementById('ps-btn-create'), BUTTONS.BACK);
+      bindBtn(document.getElementById('ps-btn-options'), BUTTONS.START);
+      bindBtn(document.getElementById('ps-touchpad'), BUTTONS.BACK);
+
+      bindBtn(document.getElementById('xb-du'), BUTTONS.UP);
+      bindBtn(document.getElementById('xb-dd'), BUTTONS.DOWN);
+      bindBtn(document.getElementById('xb-dl'), BUTTONS.LEFT);
+      bindBtn(document.getElementById('xb-dr'), BUTTONS.RIGHT);
+      bindBtn(document.getElementById('xb-btn-a'), BUTTONS.A);
+      bindBtn(document.getElementById('xb-btn-b'), BUTTONS.B);
+      bindBtn(document.getElementById('xb-btn-x'), BUTTONS.X);
+      bindBtn(document.getElementById('xb-btn-y'), BUTTONS.Y);
+      bindBtn(document.getElementById('xb-btn-guide'), BUTTONS.GUIDE);
+      bindBtn(document.getElementById('xb-btn-view'), BUTTONS.BACK);
+      bindBtn(document.getElementById('xb-btn-menu'), BUTTONS.START);
+
+      bindBtn(document.getElementById('paddle-left'), BUTTONS.SHIFT_DOWN);
+      bindBtn(document.getElementById('paddle-right'), BUTTONS.SHIFT_UP);
+      bindBtn(document.getElementById('btn-handbrake'), BUTTONS.HANDBRAKE);
+      bindBtn(document.getElementById('btn-wheel-share'), BUTTONS.BACK);
+      bindBtn(document.getElementById('btn-wheel-guide'), BUTTONS.GUIDE);
+      bindBtn(document.getElementById('btn-wheel-options'), BUTTONS.START);
+
+      const wheelHornPad = document.getElementById('wheel-horn-pad');
+      if (wheelHornPad) {
+        const pressHorn = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          state.b |= BUTTONS.HORN;
+          wheelHornPad.classList.add('pressed');
+          if (config.vibrateEnabled && navigator.vibrate) navigator.vibrate(12);
+          playClick(420, 0.025);
+        };
+        const releaseHorn = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          state.b &= ~BUTTONS.HORN;
+          wheelHornPad.classList.remove('pressed');
+        };
+        wheelHornPad.addEventListener('pointerdown', pressHorn);
+        wheelHornPad.addEventListener('pointerup', releaseHorn);
+        wheelHornPad.addEventListener('pointercancel', releaseHorn);
+        wheelHornPad.addEventListener('pointerleave', releaseHorn);
+      }
+
+      // =========================================================================
+      // HORIZONTAL TRIGGER SLIDERS (LT & RT)
+      // =========================================================================
+      function setupHorizontalTrigger(el, fillEl, valEl, setVal, slideLeft = false) {
+        if (!el) return;
+        let activePointer = null;
+        const move = (e) => {
+          if (e.pointerId !== activePointer) return;
+          const rect = el.getBoundingClientRect();
+          const rawFrac = slideLeft
+            ? (rect.right - e.clientX) / rect.width
+            : (e.clientX - rect.left) / rect.width;
+          const frac = Math.max(0, Math.min(1, rawFrac));
+          setVal(frac);
+          if (fillEl) fillEl.style.width = `${(frac * 100).toFixed(1)}%`;
+          if (valEl) valEl.textContent = `${Math.round(frac * 100)}%`;
+          el.classList.add('active');
+        };
+        el.addEventListener('pointerdown', (e) => {
+          activePointer = e.pointerId;
+          el.setPointerCapture(e.pointerId);
+          move(e);
+          if (config.vibrateEnabled && navigator.vibrate) navigator.vibrate(10);
+          playClick(500, 0.02);
+        });
+        el.addEventListener('pointermove', move);
+        const end = (e) => {
+          if (e.pointerId !== activePointer) return;
+          activePointer = null;
+          setVal(0);
+          if (fillEl) fillEl.style.width = '0%';
+          if (valEl) valEl.textContent = '0%';
+          el.classList.remove('active');
+        };
+        el.addEventListener('pointerup', end);
+        el.addEventListener('pointercancel', end);
+      }
+
+      setupHorizontalTrigger(document.getElementById('btn-l2'), document.getElementById('fill-l2'), document.getElementById('val-l2'), v => state.lt = v, false);
+      setupHorizontalTrigger(document.getElementById('btn-r2'), document.getElementById('fill-r2'), document.getElementById('val-r2'), v => state.rt = v, true);
+
+      // Pedals Setup
+      function pedalValue(raw, sensitivity = 1.0) {
+        const sens = Math.max(0.01, Number(sensitivity) || 1.0);
+        return Math.max(0, Math.min(1, raw * sens));
+      }
+
+      function setupVerticalPedal(el, fillEl, setVal, sensitivityKey) {
+        if (!el) return;
+        let activePointer = null;
+        const move = (e) => {
+          if (e.pointerId !== activePointer) return;
+          const rect = el.getBoundingClientRect();
+          const raw = Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height));
+          const frac = pedalValue(raw, config[sensitivityKey]);
+          setVal(frac);
+          if (fillEl) fillEl.style.height = `${frac * 100}%`;
+        };
+        el.addEventListener('pointerdown', (e) => {
+          activePointer = e.pointerId;
+          el.setPointerCapture(e.pointerId);
+          move(e);
+          if (config.vibrateEnabled && navigator.vibrate) navigator.vibrate(10);
+        });
+        el.addEventListener('pointermove', move);
+        const end = (e) => {
+          if (e.pointerId !== activePointer) return;
+          activePointer = null;
+          setVal(0);
+          if (fillEl) fillEl.style.height = '0%';
+        };
+        el.addEventListener('pointerup', end);
+        el.addEventListener('pointercancel', end);
+      }
+
+      setupVerticalPedal(document.getElementById('pedal-gas'), document.getElementById('fill-gas'), v => {
+        state.rt = v;
+        updateRpmLeds(v);
+      }, 'gasSensitivity');
+      setupVerticalPedal(document.getElementById('pedal-brake'), document.getElementById('fill-brake'), v => state.lt = v, 'brakeSensitivity');
+      setupVerticalPedal(document.getElementById('pedal-clutch'), document.getElementById('fill-clutch'), v => state.clutch = v, 'clutchSensitivity');
+
+      function updateRpmLeds(val) {
+        const leds = ['rpm-0', 'rpm-1', 'rpm-2', 'rpm-3', 'rpm-4', 'rpm-5', 'rpm-6', 'rpm-7', 'rpm-8', 'rpm-9'];
+        const litCount = Math.round(val * 10);
+        leds.forEach((id, idx) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.className = 'rpm-led';
+          if (idx < litCount) {
+            if (idx < 4) el.classList.add('lit-green');
+            else if (idx < 7) el.classList.add('lit-amber');
+            else if (idx < 9) el.classList.add('lit-red');
+            else el.classList.add('lit-blue');
+          }
+        });
+      }
+
+      // 6-Speed Gated Shifter
+      document.querySelectorAll('.gate-slot-btn').forEach(slot => {
+        slot.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          const gear = parseInt(slot.dataset.gear, 10);
+          document.querySelectorAll('.gate-slot-btn').forEach(s => s.classList.remove('active-gear'));
+          if (state.gear === gear) {
+            state.gear = 0;
+            document.getElementById('shifter-lcd').textContent = 'N';
+          } else {
+            state.gear = gear;
+            slot.classList.add('active-gear');
+            document.getElementById('shifter-lcd').textContent = gear < 0 ? 'R' : gear.toString();
+          }
+          playClick(500 + Math.abs(gear) * 60, 0.05);
+          if (config.vibrateEnabled && navigator.vibrate) navigator.vibrate(25);
+        });
+      });
+
+      // =========================================================================
+      // HIGH-PRECISION 1080° MULTI-REVOLUTION TOUCH STEERING ENGINE
+      // =========================================================================
+      const wheelAssembly = document.getElementById('wheel-assembly');
+      const wheelRim = document.getElementById('wheel-rim');
+      const wheelDegText = document.getElementById('wheel-deg-text');
+      const wheelTurnsText = document.getElementById('wheel-turns-text');
+      let isDraggingWheel = false;
+      let activeWheelPointerId = null;
+      let lastTouchAngle = 0;
+      let lastTouchX = 0;
+      let lastTouchY = 0;
+      let currentWheelAngle = 0;
+      let returnAnimId = null;
+
+      function calculateSteeringAxis(angleDeg) {
+        const maxHalf = (config.maxSteeringDegrees || 1080) / 2;
+        let norm = angleDeg / maxHalf;
+        norm = Math.max(-1, Math.min(1, norm));
+
+        // Deadzone
+        const dz = (config.steeringDeadzone || 0) / 100;
+        if (Math.abs(norm) < dz) return 0;
+
+        // Linearity / Curve
+        const sign = Math.sign(norm);
+        const lin = config.steeringLinearity || 1.0;
+        const scaled = Math.pow((Math.abs(norm) - dz) / (1 - dz), lin);
+        const sens = config.steeringSensitivity || 1.0;
+
+        return Math.max(-1, Math.min(1, sign * scaled * sens));
+      }
+
+      function updateWheelDisplay() {
+        if (wheelRim) wheelRim.style.transform = `rotate(${currentWheelAngle}deg)`;
+        if (wheelDegText) wheelDegText.textContent = `${currentWheelAngle.toFixed(1)}°`;
+        if (wheelTurnsText) {
+          const turns = (currentWheelAngle / 360).toFixed(1);
+          const turnsSign = currentWheelAngle > 0.05 ? '+' : '';
+          wheelTurnsText.textContent = `${turnsSign}${turns} Turns`;
+        }
+      }
+
+      function startReturnAnimation() {
+        if (isDraggingWheel) return;
+        if (returnAnimId) cancelAnimationFrame(returnAnimId);
+
+        const speedMode = config.returnSpeed || 'realistic';
+        if (speedMode === 'hold') return; // Stay at current angle
+
+        const factor = (speedMode === 'instant') ? 1.0 :
+          (speedMode === 'slow') ? 0.08 : 0.18; // Realistic smooth spring
+
+        function step() {
+          if (isDraggingWheel) {
+            returnAnimId = null;
+            return;
+          }
+          const diff = 0 - currentWheelAngle;
+          if (Math.abs(diff) < 0.2 || factor >= 1.0) {
+            currentWheelAngle = 0;
+            updateWheelDisplay();
+            state.lx = 0;
+            returnAnimId = null;
+            return;
+          }
+          currentWheelAngle += diff * factor;
+          updateWheelDisplay();
+          state.lx = calculateSteeringAxis(currentWheelAngle);
+          returnAnimId = requestAnimationFrame(step);
+        }
+        returnAnimId = requestAnimationFrame(step);
+      }
+
+      if (wheelAssembly) {
+        wheelAssembly.addEventListener('pointerdown', (e) => {
+          isDraggingWheel = true;
+          activeWheelPointerId = e.pointerId;
+          wheelAssembly.setPointerCapture(e.pointerId);
+
+          // Cancel any ongoing auto-center animation when re-grabbed
+          if (returnAnimId) {
+            cancelAnimationFrame(returnAnimId);
+            returnAnimId = null;
+          }
+
+          const rect = wheelAssembly.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+
+          lastTouchAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI);
+          lastTouchX = e.clientX;
+          lastTouchY = e.clientY;
+          playClick(550, 0.02);
+          if (config.vibrateEnabled && navigator.vibrate) navigator.vibrate(8);
+        });
+
+        wheelAssembly.addEventListener('pointermove', (e) => {
+          if (!isDraggingWheel || e.pointerId !== activeWheelPointerId) return;
+          const rect = wheelAssembly.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+
+          const currTouchAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI);
+
+          // Calculate angular delta with wrapping correction across -180/+180 boundary
+          let delta = currTouchAngle - lastTouchAngle;
+          if (delta > 180) delta -= 360;
+          else if (delta < -180) delta += 360;
+
+          // Tangential Touch Assist:
+          // In addition to polar angle, calculate cross-product torque for small / linear swipes
+          const dx = e.clientX - lastTouchX;
+          const dy = e.clientY - lastTouchY;
+          const rx = e.clientX - cx;
+          const ry = e.clientY - cy;
+          const distSq = rx * rx + ry * ry;
+
+          // If finger is close to center or moving fast tangentially, ensure smooth continuous response
+          if (distSq > 100) {
+            const tangentialTorque = (dx * ry - dy * rx) / distSq;
+            const tangentialDeg = tangentialTorque * (180 / Math.PI) * -0.5;
+            // Blend if delta is abnormally small but tangential motion is strong
+            if (Math.abs(delta) < 0.1 && Math.abs(tangentialDeg) > 0.1) {
+              delta = tangentialDeg;
+            }
+          }
+
+          // Accumulate unwrapped rotation angle seamlessly past 360°, 720°, 1080°!
+          const maxHalf = (config.maxSteeringDegrees || 1080) / 2;
+          currentWheelAngle += delta;
+          currentWheelAngle = Math.max(-maxHalf, Math.min(maxHalf, currentWheelAngle));
+
+          lastTouchAngle = currTouchAngle;
+          lastTouchX = e.clientX;
+          lastTouchY = e.clientY;
+
+          updateWheelDisplay();
+          state.lx = calculateSteeringAxis(currentWheelAngle);
+        });
+
+        const releaseWheel = (e) => {
+          if (!isDraggingWheel) return;
+          if (e && e.pointerId && e.pointerId !== activeWheelPointerId) return;
+          isDraggingWheel = false;
+          activeWheelPointerId = null;
+          startReturnAnimation();
+        };
+
+        wheelAssembly.addEventListener('pointerup', releaseWheel);
+        wheelAssembly.addEventListener('pointercancel', releaseWheel);
+        wheelAssembly.addEventListener('pointerleave', (e) => {
+          if (!wheelAssembly.hasPointerCapture(e.pointerId)) {
+            releaseWheel(e);
+          }
+        });
+      }
+
+      // Thumbsticks
+      function setupStick(container, cap, onMove) {
+        if (!container || !cap) return;
+        let pointerId = null;
+        const maxRadius = 38;
+
+        const move = (e) => {
+          if (e.pointerId !== pointerId) return;
+          const rect = container.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          let dx = e.clientX - cx;
+          let dy = e.clientY - cy;
+          const dist = Math.hypot(dx, dy);
+          if (dist > maxRadius) {
+            dx = (dx / dist) * maxRadius;
+            dy = (dy / dist) * maxRadius;
+          }
+          cap.style.transform = `translate(${dx}px, ${dy}px)`;
+          onMove(dx / maxRadius, dy / maxRadius);
+        };
+
+        container.addEventListener('pointerdown', (e) => {
+          pointerId = e.pointerId;
+          container.setPointerCapture(e.pointerId);
+          move(e);
+        });
+        container.addEventListener('pointermove', move);
+        const end = (e) => {
+          if (e.pointerId !== pointerId) return;
+          pointerId = null;
+          cap.style.transform = `translate(0px, 0px)`;
+          onMove(0, 0);
+        };
+        container.addEventListener('pointerup', end);
+        container.addEventListener('pointercancel', end);
+      }
+
+      setupStick(document.getElementById('ps-stick-l-box'), document.getElementById('ps-stick-l'), (x, y) => { state.lx = x; state.ly = -y; });
+      setupStick(document.getElementById('ps-stick-r-box'), document.getElementById('ps-stick-r'), (x, y) => { state.rx = x; state.ry = -y; });
+      setupStick(document.getElementById('xb-stick-l-box'), document.getElementById('xb-stick-l'), (x, y) => { state.lx = x; state.ly = -y; });
+      setupStick(document.getElementById('xb-stick-r-box'), document.getElementById('xb-stick-r'), (x, y) => { state.rx = x; state.ry = -y; });
+
+      // =========================================================================
+      // 2D ZOOMABLE & DRAGGABLE CANVAS CONTROLLER WITH AUTO-FIT & RADAR
+      // =========================================================================
+      class CanvasPanZoomController {
+        constructor(opts) {
+          this.viewport = opts.viewport;
+          this.canvas = opts.canvas;
+          this.miniRadar = opts.miniRadar;
+          this.radarIndicator = opts.radarIndicator;
+          this.zoomLevelEl = opts.zoomLevelEl;
+          this.btnFit = opts.btnFit;
+          this.btnZoomIn = opts.btnZoomIn;
+          this.btnZoomOut = opts.btnZoomOut;
+          this.btnReset = opts.btnReset;
+
+          this.scale = 1.0;
+          this.posX = 0;
+          this.posY = 0;
+          this.minScale = 0.35;
+          this.maxScale = 2.5;
+
+          this.isDragging = false;
+          this.hasMoved = false;
+          this.activePointers = new Map();
+          this.startPointers = new Map();
+          this.startPosX = 0;
+          this.startPosY = 0;
+          this.pinchStartDist = 0;
+          this.pinchStartScale = 1;
+
+          this.velX = 0;
+          this.velY = 0;
+          this.lastMoveTime = 0;
+          this.animId = null;
+
+          this.init();
+        }
+
+        init() {
+          if (!this.viewport || !this.canvas) return;
+
+          // Pointer events for smooth multi-direction 2D panning
+          this.viewport.addEventListener('pointerdown', (e) => this.onPointerDown(e));
+          window.addEventListener('pointermove', (e) => this.onPointerMove(e));
+          window.addEventListener('pointerup', (e) => this.onPointerUp(e));
+          window.addEventListener('pointercancel', (e) => this.onPointerUp(e));
+
+          // Mouse Wheel Zoom
+          this.viewport.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const factor = e.deltaY < 0 ? 1.12 : 0.88;
+            this.zoomAtPoint(factor, e.clientX, e.clientY);
+          }, { passive: false });
+
+          // Viewport Control Buttons
+          if (this.btnFit) this.btnFit.addEventListener('click', () => this.fitToScreen(true));
+          if (this.btnZoomIn) this.btnZoomIn.addEventListener('click', () => this.zoomAtCenter(1.2));
+          if (this.btnZoomOut) this.btnZoomOut.addEventListener('click', () => this.zoomAtCenter(0.8));
+          if (this.btnReset) this.btnReset.addEventListener('click', () => this.resetView());
+
+          // Mini Radar Navigation
+          if (this.miniRadar) {
+            this.miniRadar.addEventListener('pointerdown', (e) => this.onRadarClick(e));
+          }
+
+          window.addEventListener('resize', () => {
+            if (this.viewport.offsetParent !== null) {
+              this.handleAutoInitialFit(false);
+            }
+          });
+
+          // Initial layout sizing & auto-fit
+          setTimeout(() => this.handleAutoInitialFit(true), 100);
+        }
+
+        handleAutoInitialFit(isFirstLoad = false) {
+          if (!this.viewport || this.viewport.clientWidth === 0) return;
+          const vw = this.viewport.clientWidth;
+          const vh = this.viewport.clientHeight;
+          const cw = this.canvas.scrollWidth || 1330;
+          const ch = this.canvas.scrollHeight || 750;
+
+          const fitScale = Math.min((vw - 24) / cw, (vh - 24) / ch);
+
+          // On bigger screens (iPad / Tablets / Desktops or wide displays with fitScale >= 0.82):
+          // Show entire button grid fitted to screen!
+          if (vw >= 1024 || fitScale >= 0.82) {
+            this.fitToScreen(false);
+          } else {
+            // On smaller screens (smartphones):
+            // Show zoomed in (scale 1.0 or 1.1) so buttons are tactile and easy to tap, and let user drag every direction!
+            if (isFirstLoad) {
+              this.scale = 1.0;
+              this.posX = 12;
+              this.posY = 12;
+              this.applyTransform();
+            } else {
+              this.clampBounds();
+              this.applyTransform();
+            }
+          }
+        }
+
+        fitToScreen(animate = true) {
+          const vw = this.viewport.clientWidth;
+          const vh = this.viewport.clientHeight;
+          const cw = this.canvas.scrollWidth || 1330;
+          const ch = this.canvas.scrollHeight || 750;
+
+          let targetScale = Math.min((vw - 20) / cw, (vh - 20) / ch);
+          targetScale = Math.max(this.minScale, Math.min(2.0, targetScale));
+
+          const targetX = (vw - cw * targetScale) / 2;
+          const targetY = (vh - ch * targetScale) / 2;
+
+          if (animate) {
+            this.animateTo(targetX, targetY, targetScale);
+          } else {
+            this.scale = targetScale;
+            this.posX = targetX;
+            this.posY = targetY;
+            this.applyTransform();
+          }
+        }
+
+        resetView() {
+          this.animateTo(16, 16, 1.0);
+        }
+
+        zoomAtCenter(factor) {
+          const rect = this.viewport.getBoundingClientRect();
+          this.zoomAtPoint(factor, rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
+
+        zoomAtPoint(factor, clientX, clientY) {
+          const rect = this.viewport.getBoundingClientRect();
+          const vx = clientX - rect.left;
+          const vy = clientY - rect.top;
+
+          const oldScale = this.scale;
+          let newScale = oldScale * factor;
+          newScale = Math.max(this.minScale, Math.min(this.maxScale, newScale));
+
+          // Zoom towards cursor / touch focal point
+          this.posX = vx - (vx - this.posX) * (newScale / oldScale);
+          this.posY = vy - (vy - this.posY) * (newScale / oldScale);
+          this.scale = newScale;
+
+          this.clampBounds();
+          this.applyTransform();
+        }
+
+        onPointerDown(e) {
+          // Don't intercept clicks inside mini radar
+          if (e.target.closest('.canvas-mini-radar')) return;
+
+          this.activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          this.startPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+          if (this.animId) {
+            cancelAnimationFrame(this.animId);
+            this.animId = null;
+          }
+
+          if (this.activePointers.size === 1) {
+            this.isDragging = true;
+            this.hasMoved = false;
+            this.startPosX = this.posX;
+            this.startPosY = this.posY;
+            this.velX = 0;
+            this.velY = 0;
+            this.lastMoveTime = performance.now();
+            this.viewport.classList.add('is-dragging');
+          } else if (this.activePointers.size === 2) {
+            const pts = Array.from(this.activePointers.values());
+            this.pinchStartDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+            this.pinchStartScale = this.scale;
+          }
+        }
+
+        onPointerMove(e) {
+          if (!this.activePointers.has(e.pointerId)) return;
+          this.activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+          if (this.activePointers.size === 2) {
+            // Multi-touch Pinch Zoom
+            const pts = Array.from(this.activePointers.values());
+            const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+            if (this.pinchStartDist > 0) {
+              const ratio = dist / this.pinchStartDist;
+              const midX = (pts[0].x + pts[1].x) / 2;
+              const midY = (pts[0].y + pts[1].y) / 2;
+              this.scale = Math.max(this.minScale, Math.min(this.maxScale, this.pinchStartScale * ratio));
+              this.hasMoved = true;
+              this.applyTransform();
+            }
+            return;
+          }
+
+          if (!this.isDragging) return;
+
+          const start = this.startPointers.get(e.pointerId);
+          if (!start) return;
+
+          const dx = e.clientX - start.x;
+          const dy = e.clientY - start.y;
+
+          if (!this.hasMoved && Math.hypot(dx, dy) > 7) {
+            this.hasMoved = true;
+          }
+
+          if (this.hasMoved) {
+            const now = performance.now();
+            const dt = now - this.lastMoveTime;
+            if (dt > 0) {
+              this.velX = (dx - (this.posX - this.startPosX)) / dt;
+              this.velY = (dy - (this.posY - this.startPosY)) / dt;
+            }
+            this.lastMoveTime = now;
+
+            this.posX = this.startPosX + dx;
+            this.posY = this.startPosY + dy;
+
+            this.applyTransform();
+          }
+        }
+
+        onPointerUp(e) {
+          this.activePointers.delete(e.pointerId);
+          this.startPointers.delete(e.pointerId);
+
+          if (this.activePointers.size === 0 && this.isDragging) {
+            this.isDragging = false;
+            this.viewport.classList.remove('is-dragging');
+
+            // Apply Inertia on release
+            if (this.hasMoved && (Math.abs(this.velX) > 0.08 || Math.abs(this.velY) > 0.08)) {
+              this.startInertia();
+            } else {
+              this.clampBounds(true);
+            }
+          }
+        }
+
+        startInertia() {
+          let vx = this.velX * 16;
+          let vy = this.velY * 16;
+          const friction = 0.92;
+
+          const step = () => {
+            if (this.isDragging) return;
+            vx *= friction;
+            vy *= friction;
+            this.posX += vx;
+            this.posY += vy;
+
+            this.applyTransform();
+
+            if (Math.hypot(vx, vy) > 0.3) {
+              this.animId = requestAnimationFrame(step);
+            } else {
+              this.clampBounds(true);
+            }
+          };
+          this.animId = requestAnimationFrame(step);
+        }
+
+        clampBounds(animate = false) {
+          const vw = this.viewport.clientWidth;
+          const vh = this.viewport.clientHeight;
+          const cw = (this.canvas.scrollWidth || 1330) * this.scale;
+          const ch = (this.canvas.scrollHeight || 750) * this.scale;
+
+          const minX = Math.min(20, vw - cw - 20);
+          const maxX = 20;
+          const minY = Math.min(20, vh - ch - 20);
+          const maxY = 20;
+
+          let clampedX = Math.max(minX, Math.min(maxX, this.posX));
+          let clampedY = Math.max(minY, Math.min(maxY, this.posY));
+
+          if (cw < vw) clampedX = (vw - cw) / 2;
+          if (ch < vh) clampedY = (vh - ch) / 2;
+
+          if (animate && (clampedX !== this.posX || clampedY !== this.posY)) {
+            this.animateTo(clampedX, clampedY, this.scale);
+          } else {
+            this.posX = clampedX;
+            this.posY = clampedY;
+            this.applyTransform();
+          }
+        }
+
+        animateTo(targetX, targetY, targetScale) {
+          if (this.animId) cancelAnimationFrame(this.animId);
+          const startX = this.posX;
+          const startY = this.posY;
+          const startScale = this.scale;
+          const startTime = performance.now();
+          const duration = 280;
+
+          const step = (now) => {
+            const progress = Math.min(1, (now - startTime) / duration);
+            const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+
+            this.posX = startX + (targetX - startX) * ease;
+            this.posY = startY + (targetY - startY) * ease;
+            this.scale = startScale + (targetScale - startScale) * ease;
+
+            this.applyTransform();
+
+            if (progress < 1) {
+              this.animId = requestAnimationFrame(step);
+            } else {
+              this.animId = null;
+            }
+          };
+          this.animId = requestAnimationFrame(step);
+        }
+
+        panToElement(el) {
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          const canvasRect = this.canvas.getBoundingClientRect();
+          const vw = this.viewport.clientWidth;
+          const vh = this.viewport.clientHeight;
+
+          const elXInCanvas = (rect.left - canvasRect.left) / this.scale;
+          const elYInCanvas = (rect.top - canvasRect.top) / this.scale;
+          const elW = rect.width / this.scale;
+          const elH = rect.height / this.scale;
+
+          const targetX = (vw / 2) - (elXInCanvas + elW / 2) * this.scale;
+          const targetY = (vh / 2) - (elYInCanvas + elH / 2) * this.scale;
+
+          this.animateTo(targetX, targetY, Math.max(0.85, this.scale));
+
+          // Visual feedback highlight
+          el.classList.add('highlighted');
+          setTimeout(() => el.classList.remove('highlighted'), 1200);
+        }
+
+        onRadarClick(e) {
+          const radarRect = this.miniRadar.getBoundingClientRect();
+          const fracX = (e.clientX - radarRect.left) / radarRect.width;
+          const fracY = (e.clientY - radarRect.top) / radarRect.height;
+
+          const vw = this.viewport.clientWidth;
+          const vh = this.viewport.clientHeight;
+          const cw = (this.canvas.scrollWidth || 1330) * this.scale;
+          const ch = (this.canvas.scrollHeight || 750) * this.scale;
+
+          const targetX = vw / 2 - fracX * cw;
+          const targetY = vh / 2 - fracY * ch;
+          this.animateTo(targetX, targetY, this.scale);
+        }
+
+        applyTransform() {
+          this.canvas.style.transform = `translate3d(${this.posX}px, ${this.posY}px, 0) scale(${this.scale})`;
+          if (this.zoomLevelEl) {
+            this.zoomLevelEl.textContent = `${Math.round(this.scale * 100)}%`;
+          }
+          this.updateRadar();
+        }
+
+        updateRadar() {
+          if (!this.miniRadar || !this.radarIndicator) return;
+          const vw = this.viewport.clientWidth;
+          const vh = this.viewport.clientHeight;
+          const cw = (this.canvas.scrollWidth || 1330) * this.scale;
+          const ch = (this.canvas.scrollHeight || 750) * this.scale;
+          const rw = this.miniRadar.clientWidth;
+          const rh = this.miniRadar.clientHeight;
+
+          if (cw <= 0 || ch <= 0) return;
+
+          const boxW = Math.max(8, Math.min(rw, (vw / cw) * rw));
+          const boxH = Math.max(8, Math.min(rh, (vh / ch) * rh));
+          const boxX = Math.max(0, Math.min(rw - boxW, (-this.posX / cw) * rw));
+          const boxY = Math.max(0, Math.min(rh - boxH, (-this.posY / ch) * rh));
+
+          this.radarIndicator.style.width = `${boxW}px`;
+          this.radarIndicator.style.height = `${boxH}px`;
+          this.radarIndicator.style.transform = `translate(${boxX}px, ${boxY}px)`;
+        }
+      }
+
+      // Initialize Pan & Zoom Controller for Super Truckbox
+      const truckPanZoom = new CanvasPanZoomController({
+        viewport: document.getElementById('truck-viewport'),
+        canvas: document.getElementById('truck-canvas'),
+        miniRadar: document.getElementById('truck-mini-radar'),
+        radarIndicator: document.getElementById('truck-radar-box'),
+        zoomLevelEl: document.getElementById('tb-zoom-level'),
+        btnFit: document.getElementById('tb-tool-fit'),
+        btnZoomIn: document.getElementById('tb-tool-zoom-in'),
+        btnZoomOut: document.getElementById('tb-tool-zoom-out'),
+        btnReset: document.getElementById('tb-tool-reset')
+      });
+
+      // Category Quick Jump: Smoothly pans canvas to center selected category panel!
+      document.querySelectorAll('.truckbox-cat-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.truckbox-cat-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const target = pill.dataset.target;
+          if (target === 'cat-all') {
+            truckPanZoom.fitToScreen(true);
+          } else {
+            const panel = document.getElementById(target);
+            if (panel) truckPanZoom.panToElement(panel);
+          }
+        });
+      });
+
+      // =========================================================================
+      // DYNAMIC CUSTOM BUTTON DECK LOADER & CONTROLLER
+      // =========================================================================
+      const defaultCustomDecks = [
+        {
+          id: 'deck_pro_cockpit',
+          name: '🚚 Pro Cockpit Deck',
+          columns: 4,
+          buttons: [
+            { label: 'ENGINE START', sub: 'TOGGLE', icon: '⚡', mask: 1 << 15, toggle: true, color: 'emerald' },
+            { label: 'HANDBRAKE', sub: 'PARK', icon: '🛑', mask: 1 << 19, toggle: true, color: 'safety' },
+            { label: 'HAZARDS', sub: 'WARN', icon: '⚠️', mask: 1 << 18, toggle: true, color: 'hazard' },
+            { label: 'AIR HORN', sub: 'BLAST', icon: '📢', mask: 1 << 30, toggle: false, color: 'cyan' },
+            { label: 'HEADLIGHTS', sub: 'MODE', icon: '💡', mask: 1 << 16, toggle: false, color: 'cyan' },
+            { label: 'HIGH BEAMS', sub: 'MAIN', icon: '🔦', mask: 1 << 17, toggle: true, color: 'cyan' },
+            { label: 'BEACONS', sub: 'ROOF', icon: '🚨', mask: 1 << 26, toggle: true, color: 'amber' },
+            { label: 'WIPERS +', sub: 'RAIN', icon: '🌧️', mask: 1 << 16, toggle: false, color: 'default' },
+            { label: 'DIFF LOCK', sub: 'AXLE', icon: '🔒', mask: 1 << 29, toggle: true, color: 'amber' },
+            { label: 'RETARDER +', sub: 'BRAKE', icon: '🎚️', mask: 1 << 5, toggle: false, color: 'default' },
+            { label: 'RETARDER -', sub: 'BRAKE', icon: '🎚️', mask: 1 << 4, toggle: false, color: 'default' },
+            { label: 'CRUISE ON', sub: 'CC', icon: '🎯', mask: 1 << 31, toggle: true, color: 'emerald' },
+            { label: 'CC RESUME', sub: 'SET', icon: '🔄', mask: 1 << 0, toggle: false, color: 'default' },
+            { label: 'TRAILER', sub: 'COUPLE', icon: '🔗', mask: 1 << 30, toggle: true, color: 'safety' },
+            { label: 'ROUTE GPS', sub: 'F3', icon: '🗺️', mask: 1 << 1, toggle: false, color: 'default' },
+            { label: 'CB RADIO', sub: 'PTT', icon: '🎙️', mask: 1 << 8, toggle: false, color: 'danger' }
+          ]
+        },
+        {
+          id: 'deck_heavy_haul',
+          name: '🛑 Heavy Rig & Retarder',
+          columns: 3,
+          buttons: [
+            { label: 'ENGINE BRAKE', sub: 'JAKE', icon: '⚡', mask: 1 << 19, toggle: true, color: 'amber' },
+            { label: 'ENG BRAKE +', sub: 'LEVEL', icon: '➕', mask: 1 << 10, toggle: false, color: 'default' },
+            { label: 'ENG BRAKE -', sub: 'LEVEL', icon: '➖', mask: 1 << 11, toggle: false, color: 'default' },
+            { label: 'RETARDER +', sub: 'STG', icon: '🎚️', mask: 1 << 5, toggle: false, color: 'default' },
+            { label: 'RETARDER -', sub: 'STG', icon: '🎚️', mask: 1 << 4, toggle: false, color: 'default' },
+            { label: 'AUTO RETARDER', sub: 'SMART', icon: '🤖', mask: 1 << 27, toggle: true, color: 'cyan' },
+            { label: 'DIFF LOCK', sub: 'TRACTION', icon: '🔒', mask: 1 << 29, toggle: true, color: 'safety' },
+            { label: 'TRUCK AXLE', sub: 'LIFT', icon: '⬆️', mask: 1 << 28, toggle: true, color: 'default' },
+            { label: 'TRAILER AXLE', sub: 'LIFT', icon: '⬆️', mask: 1 << 29, toggle: true, color: 'default' },
+            { label: 'EMERGENCY BRK', sub: 'STOP', icon: '🛑', mask: 1 << 1, toggle: true, color: 'danger' },
+            { label: 'HAZARDS', sub: 'PULSE', icon: '⚠️', mask: 1 << 18, toggle: true, color: 'hazard' },
+            { label: 'AIR HORN', sub: 'BLAST', icon: '📢', mask: 1 << 30, toggle: false, color: 'danger' }
+          ]
+        }
+      ];
+
+      let customPanZoom = null;
+      function renderCustomDeck() {
+        const navBar = document.getElementById('custom-deck-selector-bar');
+        const canvas = document.getElementById('custom-canvas');
+        if (!navBar || !canvas) return;
+
+        let decks = defaultCustomDecks;
+        try {
+          const saved = localStorage.getItem('mobicon_custom_decks');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) decks = parsed;
+          }
+        } catch (e) { }
+
+        let activeDeckId = localStorage.getItem('mobicon_active_deck') || decks[0].id;
+        let activeDeck = decks.find(d => d.id === activeDeckId) || decks[0];
+
+        // Render deck picker pills
+        navBar.innerHTML = '';
+        decks.forEach(d => {
+          const btn = document.createElement('button');
+          btn.className = `custom-deck-pill ${d.id === activeDeck.id ? 'active' : ''}`;
+          btn.textContent = d.name || 'Deck';
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.setItem('mobicon_active_deck', d.id);
+            renderCustomDeck();
+          });
+          navBar.appendChild(btn);
+        });
+
+        // Render buttons in custom canvas
+        canvas.innerHTML = '';
+        const cols = activeDeck.columns || 4;
+        canvas.style.gridTemplateColumns = `repeat(${cols}, minmax(130px, 1fr))`;
+        canvas.style.width = `${Math.max(340, cols * 140)}px`;
+
+        (activeDeck.buttons || []).forEach(b => {
+          const btn = document.createElement('button');
+          btn.className = `truck-btn ${b.color || ''}`;
+          btn.innerHTML = `<span>${b.icon || '🔘'}</span>${b.label || 'BTN'}`;
+          if (b.sub) {
+            btn.innerHTML += `<span style="font-size: 8px; opacity: 0.6; font-weight: normal;">${b.sub}</span>`;
+          }
+
+          if (b.toggle) {
+            bindToggleBtn(btn, b.mask || (1 << 0));
+          } else {
+            bindBtn(btn, b.mask || (1 << 0));
+          }
+          canvas.appendChild(btn);
+        });
+
+        if (!customPanZoom) {
+          customPanZoom = new CanvasPanZoomController({
+            viewport: document.getElementById('custom-viewport'),
+            canvas: document.getElementById('custom-canvas'),
+            miniRadar: document.getElementById('custom-mini-radar'),
+            radarIndicator: document.getElementById('custom-radar-box'),
+            zoomLevelEl: document.getElementById('custom-zoom-level'),
+            btnFit: document.getElementById('custom-tool-fit'),
+            btnZoomIn: document.getElementById('custom-tool-zoom-in'),
+            btnZoomOut: document.getElementById('custom-tool-zoom-out'),
+            btnReset: document.getElementById('custom-tool-reset')
+          });
+        } else {
+          setTimeout(() => customPanZoom.handleAutoInitialFit(true), 50);
+        }
+      }
+      renderCustomDeck();
+
+      // Layout Tab Switcher Hook to trigger auto-fit
+      const originalTabListeners = document.querySelectorAll('.layout-tab');
+      originalTabListeners.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const layout = tab.dataset.layout;
+          if (layout === 'truck') {
+            setTimeout(() => truckPanZoom.handleAutoInitialFit(true), 60);
+          } else if (layout === 'custom') {
+            renderCustomDeck();
+            setTimeout(() => { if (customPanZoom) customPanZoom.handleAutoInitialFit(true); }, 60);
+          }
+        });
+      });
+
+      // 1. Engine & Driving
+      bindToggleBtn(document.getElementById('tb-start-engine'), BUTTONS.IGNITION);
+      bindToggleBtn(document.getElementById('tb-ign-elec'), 1 << 14);
+      bindToggleBtn(document.getElementById('tb-parking-brake'), BUTTONS.HANDBRAKE);
+      bindBtn(document.getElementById('tb-shift-up'), BUTTONS.SHIFT_UP);
+      bindBtn(document.getElementById('tb-shift-down'), BUTTONS.SHIFT_DOWN);
+      bindToggleBtn(document.getElementById('tb-gearbox-mode'), 1 << 22);
+      bindBtn(document.getElementById('tb-shift-d'), BUTTONS.GEAR1);
+      bindBtn(document.getElementById('tb-shift-n'), BUTTONS.BACK);
+      bindBtn(document.getElementById('tb-shift-r'), BUTTONS.GEAR_REV);
+      bindToggleBtn(document.getElementById('tb-adaptive-trans'), 1 << 23);
+      bindToggleBtn(document.getElementById('tb-range-toggle'), 1 << 24);
+      bindToggleBtn(document.getElementById('tb-splitter-toggle'), 1 << 25);
+
+      // 2. Lights & Visibility
+      bindBtn(document.getElementById('tb-light-mode'), BUTTONS.HEADLIGHTS);
+      bindToggleBtn(document.getElementById('tb-high-beam'), 1 << 17);
+      bindBtn(document.getElementById('tb-light-horn'), 1 << 15);
+      bindToggleBtn(document.getElementById('tb-turn-left'), BUTTONS.LEFT);
+      bindToggleBtn(document.getElementById('tb-hazard'), BUTTONS.HAZARD);
+      bindToggleBtn(document.getElementById('tb-turn-right'), BUTTONS.RIGHT);
+      bindToggleBtn(document.getElementById('tb-beacon'), 1 << 26);
+      bindBtn(document.getElementById('tb-wipers-up'), BUTTONS.WIPERS);
+      bindBtn(document.getElementById('tb-wipers-dn'), 1 << 16);
+      bindBtn(document.getElementById('tb-win-l-open'), 1 << 10);
+      bindBtn(document.getElementById('tb-win-l-close'), 1 << 11);
+      bindBtn(document.getElementById('tb-win-r-open'), 1 << 12);
+
+      // 3. Auxiliary Brakes & Axles
+      bindToggleBtn(document.getElementById('tb-eng-brake-toggle'), 1 << 19);
+      bindBtn(document.getElementById('tb-eng-brake-up'), BUTTONS.UP);
+      bindBtn(document.getElementById('tb-eng-brake-dn'), BUTTONS.DOWN);
+      bindBtn(document.getElementById('tb-retarder-inc'), BUTTONS.RB);
+      bindBtn(document.getElementById('tb-retarder-dec'), BUTTONS.LB);
+      bindToggleBtn(document.getElementById('tb-retarder-auto'), 1 << 27);
+      bindToggleBtn(document.getElementById('tb-lift-truck-axle'), 1 << 28);
+      bindToggleBtn(document.getElementById('tb-lift-trailer-axle'), 1 << 29);
+      bindToggleBtn(document.getElementById('tb-diff-lock'), BUTTONS.DIFFLOCK);
+      bindBtn(document.getElementById('tb-susp-f-up'), 1 << 8);
+      bindBtn(document.getElementById('tb-susp-f-dn'), 1 << 9);
+      bindBtn(document.getElementById('tb-susp-reset'), BUTTONS.START);
+
+      // 4. Cruise & Driving Assistants
+      bindToggleBtn(document.getElementById('tb-cc-toggle'), BUTTONS.CRUISE);
+      bindBtn(document.getElementById('tb-cc-resume'), BUTTONS.A);
+      bindToggleBtn(document.getElementById('tb-cc-adaptive'), 1 << 13);
+      bindBtn(document.getElementById('tb-cc-speed-up'), BUTTONS.Y);
+      bindBtn(document.getElementById('tb-cc-speed-dn'), BUTTONS.X);
+      bindToggleBtn(document.getElementById('tb-emergency-brake'), BUTTONS.B);
+      bindToggleBtn(document.getElementById('tb-lane-mode'), 1 << 20);
+      bindToggleBtn(document.getElementById('tb-lane-keep'), 1 << 21);
+      bindBtn(document.getElementById('tb-assist-1'), 1 << 7);
+
+      // 5. Cabin & Audio Systems
+      bindBtn(document.getElementById('tb-dash-mode'), 1 << 6);
+      bindBtn(document.getElementById('tb-infotainment-mode'), 1 << 5);
+      bindBtn(document.getElementById('tb-trip-reset'), 1 << 4);
+      bindBtn(document.getElementById('tb-city-horn'), BUTTONS.HORN);
+      bindBtn(document.getElementById('tb-air-horn'), BUTTONS.HORN);
+      bindToggleBtn(document.getElementById('tb-radio-power'), 1 << 3);
+      bindBtn(document.getElementById('tb-vol-up'), BUTTONS.UP);
+      bindBtn(document.getElementById('tb-vol-dn'), BUTTONS.DOWN);
+      bindBtn(document.getElementById('tb-next-station'), BUTTONS.RIGHT);
+
+      // 6. Trailer, HUD & Management
+      bindToggleBtn(document.getElementById('tb-trailer-couple'), BUTTONS.TRAILER);
+      bindBtn(document.getElementById('tb-mirrors-f2'), 1 << 2);
+      bindBtn(document.getElementById('tb-advisor-f3'), 1 << 1);
+      bindBtn(document.getElementById('tb-truck-menu-f4'), 1 << 0);
+      bindBtn(document.getElementById('tb-mouse-ctrl'), BUTTONS.L3);
+      bindBtn(document.getElementById('tb-map-zoom-in'), BUTTONS.R3);
+      bindBtn(document.getElementById('tb-map-zoom-out'), BUTTONS.LB);
+      bindBtn(document.getElementById('tb-job-info'), BUTTONS.BACK);
+      bindBtn(document.getElementById('tb-diagnostics'), BUTTONS.START);
+
+      // 7. Cameras & Convoy / Multiplayer
+      bindBtn(document.getElementById('tb-cam-1'), BUTTONS.GEAR1);
+      bindBtn(document.getElementById('tb-cam-2'), BUTTONS.GEAR2);
+      bindBtn(document.getElementById('tb-cam-3'), BUTTONS.GEAR3);
+      bindBtn(document.getElementById('tb-cam-4'), BUTTONS.GEAR4);
+      bindBtn(document.getElementById('tb-cam-5'), BUTTONS.GEAR5);
+      bindBtn(document.getElementById('tb-cam-6'), BUTTONS.GEAR6);
+      bindBtn(document.getElementById('tb-look-left'), BUTTONS.LEFT);
+      bindBtn(document.getElementById('tb-look-fwd'), BUTTONS.UP);
+      bindBtn(document.getElementById('tb-look-right'), BUTTONS.RIGHT);
+      bindBtn(document.getElementById('tb-zoom-interior'), BUTTONS.R3);
+      bindBtn(document.getElementById('tb-cb-radio'), BUTTONS.L3);
+      bindToggleBtn(document.getElementById('tb-chat-toggle'), BUTTONS.GUIDE);
+
+      // =========================================================================
+      // SETTINGS MODAL & GYROSCOPE CALIBRATION
+      // =========================================================================
+      const modal = document.getElementById('modal-settings');
+      document.getElementById('btn-settings').addEventListener('click', () => modal.classList.add('active'));
+      document.getElementById('btn-close-settings').addEventListener('click', () => modal.classList.remove('active'));
+
+      const selModalDeg = document.getElementById('sel-modal-degrees');
+      const rngModalSens = document.getElementById('rng-modal-sens');
+      const chkModalVib = document.getElementById('chk-modal-vibrate');
+      const chkModalGyro = document.getElementById('chk-modal-gyro');
+
+      selModalDeg.value = config.maxSteeringDegrees.toString();
+      rngModalSens.value = Math.round(config.steeringSensitivity * 100);
+      chkModalVib.checked = config.vibrateEnabled;
+      chkModalGyro.checked = config.gyroEnabled;
+
+      selModalDeg.addEventListener('change', (e) => {
+        config.maxSteeringDegrees = parseInt(e.target.value, 10);
+        localStorage.setItem('mobicon_config', JSON.stringify(config));
+        wheelTurnsText.textContent = `${config.maxSteeringDegrees}° LOCK`;
+      });
+      rngModalSens.addEventListener('input', (e) => {
+        config.steeringSensitivity = e.target.value / 100;
+        localStorage.setItem('mobicon_config', JSON.stringify(config));
+      });
+      chkModalVib.addEventListener('change', (e) => {
+        config.vibrateEnabled = e.target.checked;
+        localStorage.setItem('mobicon_config', JSON.stringify(config));
+      });
+      chkModalGyro.addEventListener('change', (e) => {
+        config.gyroEnabled = e.target.checked;
+        localStorage.setItem('mobicon_config', JSON.stringify(config));
+      });
+
+      // Gyroscope Calibration
+      document.getElementById('btn-gyro-cal').addEventListener('click', async () => {
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+          try {
+            const res = await DeviceOrientationEvent.requestPermission();
+            if (res === 'granted') startGyro();
+          } catch (e) { }
+        } else {
+          startGyro();
+        }
+      });
+
+      function startGyro() {
+        gyroActive = true;
+        window.addEventListener('deviceorientation', (e) => {
+          if (!gyroActive || !config.gyroEnabled || !e.gamma) return;
+          if (isDraggingWheel) return; // Touch wheel dragging takes priority
+          const tilt = e.gamma - gyroZero;
+          const range = config.gyroAngleRange || 35;
+          const norm = Math.max(-1, Math.min(1, tilt / range));
+
+          const maxHalf = (config.maxSteeringDegrees || 1080) / 2;
+          if (activeLayout === 'wheel') {
+            currentWheelAngle = norm * maxHalf;
+            updateWheelDisplay();
+          }
+          state.lx = calculateSteeringAxis(currentWheelAngle);
+        });
+        showBanner('📐 Gyroscope steering active! Hold device in horizontal steering orientation.');
+      }
+    })();
+  </script>
+</body>
+
+</html>

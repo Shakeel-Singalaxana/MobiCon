@@ -1,0 +1,2870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mobicon-by shakbrotech | Configuration & Sensor Calibration Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-base: #0c1018;
+    --bg-dark: #0c1018;
+    --bg-surface: #151b27;
+    --bg-surface-elevated: #1c2435;
+    --bg-surface-high: #242f44;
+    --bg-surface-sunken: #0e121c;
+    --bg-surface-pressed: #121722;
+
+    --border-clay: #283448;
+    --border-clay-light: #364662;
+    --border-clay-pressed: #1a2232;
+
+    --clay-shadow-surface: 8px 12px 28px rgba(0, 0, 0, 0.55), -3px -3px 10px rgba(255, 255, 255, 0.03), inset 1px 1px 2px rgba(255, 255, 255, 0.08), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+    --clay-shadow-button: 4px 6px 14px rgba(0, 0, 0, 0.5), -2px -2px 6px rgba(255, 255, 255, 0.04), inset 1px 1px 2px rgba(255, 255, 255, 0.12), inset -2px -2px 4px rgba(0, 0, 0, 0.35);
+    --clay-shadow-pressed: inset 3px 3px 8px rgba(0, 0, 0, 0.65), inset -2px -2px 5px rgba(255, 255, 255, 0.03);
+    --clay-shadow-sunken: inset 4px 4px 10px rgba(0, 0, 0, 0.75), inset -2px -2px 6px rgba(255, 255, 255, 0.03);
+    --clay-shadow-pill: 3px 4px 12px rgba(0, 0, 0, 0.45), inset 1px 1px 1px rgba(255, 255, 255, 0.1);
+    
+    --accent-cyan: #06b6d4;
+    --accent-blue: #38bdf8;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-rose: #ef4444;
+    --accent-purple: #8b5cf6;
+
+    --p1-col: #38bdf8;
+    --p2-col: #f43f5e;
+    --p3-col: #10b981;
+    --p4-col: #f59e0b;
+
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    background-image: 
+      radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(139, 92, 246, 0.05) 0%, transparent 40%),
+      linear-gradient(180deg, #0c1018 0%, #111624 100%);
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1280px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* Header in Clay Style */
+  header.config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-surface);
+    border: 2px solid var(--border-clay-light);
+    border-radius: 22px;
+    padding: 18px 26px;
+    box-shadow: var(--clay-shadow-surface);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .brand-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .brand-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0284c7, #818cf8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: var(--clay-shadow-button);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .brand-titles {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand-name {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, #38bdf8, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .brand-badge-author {
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .github-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--border-clay);
+    padding: 7px 16px;
+    border-radius: 999px;
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    box-shadow: var(--clay-shadow-pill);
+    transition: all 0.2s ease;
+  }
+  .github-pill:hover {
+    background: var(--bg-surface-high);
+    border-color: var(--accent-cyan);
+    transform: translateY(-1px);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-surface-sunken);
+    border: 1.5px solid var(--border-clay);
+    padding: 8px 16px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: var(--clay-shadow-sunken);
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+  }
+  .status-dot.online {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    color: #030712;
+    padding: 10px 18px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    font-weight: 900;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    transition: all 0.15s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.55);
+  }
+  .btn-primary:active {
+    transform: translateY(1px) scale(0.98);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--border-clay-light);
+    color: var(--text-main);
+    padding: 9px 16px;
+    border-radius: 14px;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: var(--clay-shadow-button);
+    transition: all 0.15s ease;
+  }
+  .btn-secondary:hover {
+    background: var(--bg-surface-high);
+  }
+  .btn-secondary:active {
+    transform: translateY(1.5px);
+    box-shadow: var(--clay-shadow-pressed);
+  }
+
+  /* =========================================================================
+     HERO FIRST-GLANCE QR CODE & CONNECT SECTION (CLAY CARD)
+     ========================================================================= */
+  .qr-hero-card {
+    background: var(--bg-surface);
+    border: 2px solid var(--border-clay-light);
+    border-radius: 24px;
+    padding: 26px;
+    box-shadow: var(--clay-shadow-surface);
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .qr-code-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.4);
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .qr-img {
+    width: 150px;
+    height: 150px;
+    display: block;
+    image-rendering: pixelated;
+  }
+
+  .qr-scan-badge {
+    font-size: 11.5px;
+    font-weight: 900;
+    color: #030712;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .qr-info-content {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .qr-hero-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .qr-hero-desc {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .qr-url-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-surface-sunken);
+    border: 1.5px solid var(--border-clay);
+    padding: 9px 16px;
+    border-radius: 14px;
+    box-shadow: var(--clay-shadow-sunken);
+    max-width: 520px;
+    flex-wrap: wrap;
+  }
+
+  .qr-url-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent-cyan);
+    flex: 1;
+    word-break: break-all;
+  }
+
+  .quick-step-pills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .step-pill-card {
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--border-clay-light);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--clay-shadow-button);
+    transition: all 0.2s ease;
+  }
+  .step-pill-card:hover {
+    background: var(--bg-surface-high);
+    border-color: var(--accent-cyan);
+  }
+  .step-pill-num {
+    font-size: 11.5px;
+    font-weight: 900;
+    color: var(--accent-cyan);
+  }
+  .step-pill-text {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  /* Grid Layout */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 22px;
+  }
+
+  .col-12 { grid-column: span 12; }
+  .col-8  { grid-column: span 8; }
+  .col-6  { grid-column: span 6; }
+  .col-4  { grid-column: span 4; }
+
+  @media (max-width: 1024px) {
+    .col-8, .col-6, .col-4 { grid-column: span 12; }
+  }
+
+  /* Cards in Clay Theme */
+  .card {
+    background: var(--bg-surface);
+    border: 2px solid var(--border-clay-light);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: var(--clay-shadow-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid var(--border-clay);
+    padding-bottom: 14px;
+  }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+  }
+
+  .card-subtitle {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  /* Tooltip Helpers */
+  .info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-clay);
+    color: var(--accent-cyan);
+    font-size: 10px;
+    font-weight: 900;
+    cursor: help;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* Slot Cards (Clay Tactile) */
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .slot-card {
+    background: var(--bg-surface-elevated);
+    border: 2px solid var(--border-clay-light);
+    border-radius: 18px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: var(--clay-shadow-button);
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .slot-card.p1 { --slot-c: var(--p1-col); }
+  .slot-card.p2 { --slot-c: var(--p2-col); }
+  .slot-card.p3 { --slot-c: var(--p3-col); }
+  .slot-card.p4 { --slot-c: var(--p4-col); }
+
+  .slot-card.locked {
+    border-color: var(--slot-c);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), var(--clay-shadow-button);
+  }
+
+  .slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .slot-badge {
+    font-size: 12.5px;
+    font-weight: 900;
+    color: #030712;
+    background: var(--slot-c);
+    padding: 4px 12px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--slot-c);
+  }
+
+  .slot-status-pill {
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .slot-status-pill.free {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+  }
+  .slot-status-pill.busy {
+    background: rgba(244, 63, 94, 0.15);
+    color: #f43f5e;
+    border: 1px solid rgba(244, 63, 94, 0.4);
+  }
+
+  .slot-device-info {
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 700;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--bg-surface-sunken);
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border-clay);
+    box-shadow: var(--clay-shadow-sunken);
+  }
+  .slot-device-name {
+    font-weight: 800;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .slot-device-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--text-dim);
+  }
+
+  .slot-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-slot-kick {
+    flex: 1;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1.5px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: var(--clay-shadow-button);
+    transition: all 0.2s ease;
+  }
+  .btn-slot-kick:hover:not(:disabled) {
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+  }
+  .btn-slot-kick:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* Form Elements & Sliders in Clay Style */
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .control-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .control-label {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+  }
+
+  .control-value-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--accent-cyan);
+    background: var(--bg-surface-sunken);
+    padding: 3px 9px;
+    border-radius: 8px;
+    border: 1px solid var(--border-clay);
+    box-shadow: var(--clay-shadow-sunken);
+  }
+
+  .control-desc {
+    font-size: 11.5px;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    background: var(--bg-surface-sunken);
+    border: 1px solid var(--border-clay);
+    box-shadow: var(--clay-shadow-sunken);
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0284c7, #38bdf8);
+    border: 2.5px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 10px rgba(56, 189, 248, 0.8);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+
+  .select-pill-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .select-pill {
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--border-clay-light);
+    color: var(--text-muted);
+    padding: 7px 14px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: var(--clay-shadow-button);
+    transition: all 0.2s ease;
+  }
+  .select-pill.active {
+    background: var(--accent-cyan);
+    color: #030712;
+    border-color: #fff;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.5);
+  }
+
+  /* Toggle Switch in Clay Style */
+  .switch-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--bg-surface-elevated);
+    border-radius: 14px;
+    border: 1.5px solid var(--border-clay-light);
+    box-shadow: var(--clay-shadow-button);
+  }
+  .switch-label-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .switch-label-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: center;
+  }
+  .switch-label-sub {
+    font-size: 11.5px;
+    color: var(--text-dim);
+  }
+
+  .toggle-input {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--bg-surface-sunken);
+    border: 1.5px solid var(--border-clay);
+    box-shadow: var(--clay-shadow-sunken);
+    border-radius: 14px;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.25s ease;
+  }
+  .toggle-input::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #94a3b8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+  .toggle-input:checked {
+    background: #10b981;
+    border-color: #10b981;
+  }
+  .toggle-input:checked::after {
+    transform: translateX(22px);
+    background: #fff;
+  }
+
+  /* Live Visualizer in Clay Style */
+  .vis-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    background: var(--bg-surface-sunken);
+    border-radius: 18px;
+    padding: 20px;
+    border: 1.5px solid var(--border-clay);
+    box-shadow: var(--clay-shadow-sunken);
+  }
+
+  .vis-axes-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .stick-tester {
+    width: 114px;
+    height: 114px;
+    border-radius: 50%;
+    background: var(--bg-surface-sunken);
+    border: 2px solid var(--border-clay);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.8);
+  }
+  .stick-cross-h {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: var(--border-clay);
+  }
+  .stick-cross-v {
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    background: var(--border-clay);
+  }
+  .stick-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    border: 2px solid #fff;
+    box-shadow: 0 0 14px var(--accent-cyan);
+    position: absolute;
+    transition: transform 0.04s linear;
+  }
+
+  .trigger-gauge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 36px;
+  }
+  .gauge-track {
+    width: 26px;
+    height: 104px;
+    background: var(--bg-surface-sunken);
+    border: 1.5px solid var(--border-clay);
+    border-radius: 8px;
+    box-shadow: var(--clay-shadow-sunken);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .gauge-fill {
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(0deg, #10b981, #38bdf8);
+    border-radius: 6px;
+    transition: height 0.04s linear;
+  }
+  .gauge-label {
+    font-size: 11px;
+    font-weight: 900;
+    color: var(--text-muted);
+  }
+
+  .wheel-preview-box {
+    width: 160px;
+    height: 160px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wheel-preview-rim {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 9px solid var(--border-clay-light);
+    box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 12px rgba(0,0,0,0.9);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+    transition: transform 0.05s linear;
+  }
+  .wheel-preview-mark {
+    position: absolute;
+    top: -4px;
+    width: 8px;
+    height: 14px;
+    background: #38bdf8;
+    border-radius: 2px;
+    box-shadow: 0 0 8px #38bdf8;
+  }
+  .wheel-preview-hub {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--bg-surface-elevated);
+    border: 2px solid var(--border-clay-light);
+    box-shadow: var(--clay-shadow-button);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11.5px;
+    font-weight: 900;
+    color: #fff;
+  }
+
+  /* =========================================================================
+     CUSTOM BUTTON PAGE & COCKPIT STUDIO STYLES
+     ========================================================================= */
+  .studio-card {
+    grid-column: span 12;
+  }
+
+  .deck-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--bg-surface-sunken);
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 1.5px solid var(--border-clay);
+    box-shadow: var(--clay-shadow-sunken);
+  }
+
+  .deck-tabs-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: 2px;
+  }
+
+  .deck-tab-pill {
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--border-clay-light);
+    color: var(--text-muted);
+    font-size: 12.5px;
+    font-weight: 800;
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: var(--clay-shadow-button);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+  .deck-tab-pill:hover {
+    background: var(--bg-surface-high);
+    border-color: var(--accent-cyan);
+  }
+  .deck-tab-pill.active {
+    background: var(--accent-cyan);
+    color: #030712;
+    border-color: #fff;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.5);
+  }
+
+  .deck-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .studio-layout-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr 340px;
+    gap: 18px;
+    width: 100%;
+  }
+  @media (max-width: 1200px) {
+    .studio-layout-grid {
+      grid-template-columns: 300px 1fr;
+    }
+    .preview-col {
+      grid-column: span 2;
+    }
+  }
+  @media (max-width: 860px) {
+    .studio-layout-grid {
+      grid-template-columns: 1fr;
+    }
+    .preview-col {
+      grid-column: span 1;
+    }
+  }
+
+  /* Palette & Library Column */
+  .palette-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 820px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .palette-accordion {
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--border-clay-light);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--clay-shadow-button);
+  }
+  .palette-acc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #fff;
+    background: var(--bg-surface-high);
+  }
+  .palette-acc-body {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .btn-palette-add {
+    background: var(--bg-surface-sunken);
+    border: 1px solid var(--border-clay);
+    color: var(--text-main);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 7px 6px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-align: center;
+    box-shadow: var(--clay-shadow-sunken);
+    transition: all 0.15s ease;
+  }
+  .btn-palette-add:hover {
+    background: var(--bg-surface-elevated);
+    border-color: var(--accent-cyan);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+  .btn-palette-add:active {
+    transform: translateY(1px);
+  }
+
+  /* Custom Button Builder Form */
+  .custom-builder-box {
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--accent-cyan);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.15), var(--clay-shadow-button);
+  }
+  .form-input-styled {
+    background: var(--bg-surface-sunken);
+    border: 1.5px solid var(--border-clay);
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    outline: none;
+    width: 100%;
+  }
+  .form-input-styled:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+  }
+
+  /* Visual Deck Grid Editor Column */
+  .editor-col {
+    background: var(--bg-surface-sunken);
+    border: 2px solid var(--border-clay);
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: var(--clay-shadow-sunken);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 600px;
+  }
+
+  .editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid var(--border-clay);
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .editor-grid-container {
+    display: grid;
+    gap: 12px;
+    padding: 8px 4px;
+    flex: 1;
+    align-content: start;
+    min-height: 380px;
+  }
+
+  .editor-button-card {
+    background: var(--bg-surface-elevated);
+    border: 2px solid var(--border-clay-light);
+    border-radius: 14px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: var(--clay-shadow-button);
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .editor-button-card:hover {
+    border-color: var(--accent-cyan);
+  }
+
+  .editor-btn-preview {
+    min-height: 52px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    text-align: center;
+    padding: 6px;
+    box-shadow: var(--clay-shadow-button);
+    user-select: none;
+    transition: transform 0.1s ease;
+  }
+  .editor-btn-preview:active {
+    transform: scale(0.95);
+  }
+
+  /* Color themes for buttons */
+  .editor-btn-preview.default, .truck-btn.default { background: var(--bg-surface-elevated); border: 1.5px solid var(--border-clay-light); color: var(--text-main); }
+  .editor-btn-preview.emerald, .truck-btn.emerald { background: #0d281e; border: 1.5px solid #10b981; color: #a7f3d0; }
+  .editor-btn-preview.cyan, .truck-btn.cyan { background: #0c2a38; border: 1.5px solid #38bdf8; color: #bae6fd; }
+  .editor-btn-preview.safety, .truck-btn.safety { background: #2a1b0b; border: 1.5px solid #f59e0b; color: #fbbf24; }
+  .editor-btn-preview.hazard, .truck-btn.hazard { background: #3c1414; border: 1.5px solid #ef4444; color: #ef4444; animation: pulse-hazard 0.8s infinite; }
+  .editor-btn-preview.danger, .truck-btn.danger { background: #2d0e0e; border: 1.5px solid #ef4444; color: #fca5a5; }
+  .editor-btn-preview.purple, .truck-btn.purple { background: #23123d; border: 1.5px solid #a855f7; color: #e9d5ff; }
+
+  .editor-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+  }
+
+  .btn-mini-action {
+    background: var(--bg-surface-high);
+    border: 1px solid var(--border-clay);
+    color: var(--text-muted);
+    padding: 3px 7px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 800;
+    transition: all 0.12s ease;
+  }
+  .btn-mini-action:hover {
+    background: var(--accent-cyan);
+    color: #030712;
+  }
+
+  /* Live Phone Simulator Preview Column */
+  .preview-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .phone-simulator-frame {
+    width: 320px;
+    height: 580px;
+    background: #000;
+    border: 6px solid #283448;
+    border-radius: 36px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.2);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-notch-bar {
+    height: 18px;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .phone-notch-pill {
+    width: 60px;
+    height: 10px;
+    background: #111;
+    border-radius: 99px;
+  }
+
+  .phone-screen-body {
+    flex: 1;
+    background: radial-gradient(circle at center, rgba(30, 41, 59, 0.4) 0%, rgba(12, 16, 24, 0.95) 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .phone-sim-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    cursor: grab;
+    will-change: transform;
+  }
+
+  /* Toast (Clay Pill) */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--accent-cyan);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    font-weight: 800;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.3);
+    display: none;
+    z-index: 9999;
+    animation: toast-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes toast-in {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 24px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Top Navigation & Profile Header -->
+  <header class="config-header">
+    <div class="brand-group">
+      <div class="brand-icon-box">🎮</div>
+      <div class="brand-titles">
+        <div class="brand-name">
+          mobicon
+          <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); -webkit-text-fill-color: initial;">by shakbrotech</span>
+        </div>
+        <div class="brand-badge-author">Advanced Controller Engine & Sensor Hub</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Embedded GitHub Profile link -->
+      <a href="https://github.com/shakeel-singalaxana" target="_blank" rel="noopener noreferrer" class="github-pill" title="Author Profile on GitHub">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        @shakeel-singalaxana
+      </a>
+
+      <div class="status-badge">
+        <div class="status-dot online" id="server-status-dot"></div>
+        <span id="server-status-text">Server Active</span>
+      </div>
+
+      <a href="/" target="_blank" class="btn-primary" title="Open Mobile Controller on this device">📱 Launch Controller</a>
+      <button class="btn-secondary" id="btn-shutdown-server" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.35); color: #ef4444;" title="Shut down mobicon receiver and disconnect controllers">🛑 Exit & Shutdown</button>
+    </div>
+  </header>
+
+  <!-- Fullscreen Goodbye Overlay (Solid Matte Clay) -->
+  <div id="shutdown-overlay" style="display: none; position: fixed; inset: 0; background: #0a0d14; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; gap: 20px; text-align: center; padding: 24px;">
+    <div style="font-size: 64px; animation: pulse-hazard 1.5s infinite;">🔌</div>
+    <h1 style="font-size: 32px; font-weight: 900; background: linear-gradient(90deg, #38bdf8, #a855f7, #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">mobicon Shut Down</h1>
+    <p style="color: var(--text-muted); font-size: 15px; max-width: 440px; line-height: 1.6;">The receiver server has stopped and all virtual controllers have been safely disconnected. Goodbye!</p>
+    <div style="margin-top: 14px; display: flex; gap: 12px;">
+      <button class="btn-primary" onclick="window.close()" style="padding: 12px 28px; font-size: 14px;">🚪 Close This Tab</button>
+    </div>
+  </div>
+
+  <section class="card col-12" id="driver-setup-card" style="display: none; border-color: rgba(245, 158, 11, 0.45); margin-bottom: 18px;">
+    <div class="card-header">
+      <div>
+        <div class="card-title">⚙️ Virtual Driver Setup Required</div>
+        <div class="card-subtitle" id="driver-setup-copy">Install ViGEm for PS/Xbox and steering controllers. Truckbox controls use keyboard simulation.</div>
+      </div>
+      <div id="driver-setup-actions" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       HERO FIRST-GLANCE QR CODE CARD FOR MOBILE CONTROLLERS
+       ========================================================================= -->
+  <section class="qr-hero-card">
+    <div class="qr-code-wrapper">
+      <img src="/api/qr" alt="Scan QR Code to Connect Controller" class="qr-img" id="hero-qr-img">
+      <div class="qr-scan-badge">
+        <span>📷 SCAN TO CONNECT</span>
+      </div>
+    </div>
+
+    <div class="qr-info-content">
+      <div class="qr-hero-title">
+        <span>📱 Connect Phone / Tablet Controller</span>
+        <span class="info-icon" title="Scan with your iPhone or Android camera to open the zero-install web controller instantly on your local Wi-Fi.">ℹ️</span>
+      </div>
+      <div class="qr-hero-desc">
+        No app installation needed! Scan this QR code with your mobile camera or browser to instantly play. Supports up to 4 simultaneous players with strict exclusive slot protection.
+      </div>
+
+      <div class="qr-url-box">
+        <span style="font-size: 11px; color: var(--text-dim); font-weight: 800;">DIRECT URL:</span>
+        <span class="qr-url-text" id="lbl-primary-url">http://localhost:8080</span>
+        <button class="btn-secondary" id="btn-copy-url" style="padding: 4px 10px; font-size: 11px;">📋 Copy</button>
+      </div>
+
+      <div class="quick-step-pills">
+        <div class="step-pill-card">
+          <span class="step-pill-num">STEP 1</span>
+          <span class="step-pill-text">📷 Point Camera & Open</span>
+        </div>
+        <div class="step-pill-card">
+          <span class="step-pill-num">STEP 2</span>
+          <span class="step-pill-text">🔒 Auto Player Lock (P1–P4)</span>
+        </div>
+        <div class="step-pill-card">
+          <span class="step-pill-num">STEP 3</span>
+          <span class="step-pill-text">🏎️ Select 1080° Wheel / Truckbox</span>
+        </div>
+        <div class="step-pill-card">
+          <span class="step-pill-num">STEP 4</span>
+          <span class="step-pill-text">📐 Calibrate & Fine-Tune Below</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. EXCLUSIVE MULTIPLAYER SLOT MANAGER (P1..P4) -->
+  <section class="card col-12">
+    <div class="card-header">
+      <div>
+        <div class="card-title">
+          👥 Exclusive Device-Player Slots (1 Device = 1 Player)
+          <span class="info-icon" title="Only one physical phone/device can select and control a player slot at a time. This guarantees players never accidentally disturb or hijack each other.">ℹ️</span>
+        </div>
+        <div class="card-subtitle">Active virtual Xbox 360 controller assignments and lock states.</div>
+      </div>
+      <button class="btn-secondary" id="btn-refresh-slots">🔄 Refresh</button>
+    </div>
+
+    <div class="slots-grid" id="slots-container">
+      <div class="slot-card p1" id="slot-card-0">
+        <div class="slot-header">
+          <span class="slot-badge">PLAYER 1</span>
+          <span class="slot-status-pill free" id="slot-status-0">AVAILABLE</span>
+        </div>
+        <div class="slot-device-info">
+          <div class="slot-device-name" id="slot-dev-0">No Device Connected</div>
+          <div class="slot-device-id" id="slot-id-0">Ready to Claim</div>
+        </div>
+        <div class="slot-actions">
+          <button class="btn-slot-kick" data-slot="0" disabled>Disconnect Slot</button>
+        </div>
+      </div>
+
+      <div class="slot-card p2" id="slot-card-1">
+        <div class="slot-header">
+          <span class="slot-badge">PLAYER 2</span>
+          <span class="slot-status-pill free" id="slot-status-1">AVAILABLE</span>
+        </div>
+        <div class="slot-device-info">
+          <div class="slot-device-name" id="slot-dev-1">No Device Connected</div>
+          <div class="slot-device-id" id="slot-id-1">Ready to Claim</div>
+        </div>
+        <div class="slot-actions">
+          <button class="btn-slot-kick" data-slot="1" disabled>Disconnect Slot</button>
+        </div>
+      </div>
+
+      <div class="slot-card p3" id="slot-card-2">
+        <div class="slot-header">
+          <span class="slot-badge">PLAYER 3</span>
+          <span class="slot-status-pill free" id="slot-status-2">AVAILABLE</span>
+        </div>
+        <div class="slot-device-info">
+          <div class="slot-device-name" id="slot-dev-2">No Device Connected</div>
+          <div class="slot-device-id" id="slot-id-2">Ready to Claim</div>
+        </div>
+        <div class="slot-actions">
+          <button class="btn-slot-kick" data-slot="2" disabled>Disconnect Slot</button>
+        </div>
+      </div>
+
+      <div class="slot-card p4" id="slot-card-3">
+        <div class="slot-header">
+          <span class="slot-badge">PLAYER 4</span>
+          <span class="slot-status-pill free" id="slot-status-3">AVAILABLE</span>
+        </div>
+        <div class="slot-device-info">
+          <div class="slot-device-name" id="slot-dev-3">No Device Connected</div>
+          <div class="slot-device-id" id="slot-id-3">Ready to Claim</div>
+        </div>
+        <div class="slot-actions">
+          <button class="btn-slot-kick" data-slot="3" disabled>Disconnect Slot</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. MAIN CALIBRATION & SENSORS SECTION -->
+  <div class="dashboard-grid">
+    <!-- LEFT COLUMN: 1080° STEERING & WHEEL CALIBRATION -->
+    <div class="card col-6">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            🏎️ Logitech Controller 1080° Steering Suite
+            <span class="info-icon" title="Configures multi-turn steering rotation up to 1080 degrees (3 full turns) with customizable sensitivity and turn ratios.">ℹ️</span>
+          </div>
+          <div class="card-subtitle">Fine-tune lock-to-lock rotation, sensitivity multiplier, and degree-to-turn ratio.</div>
+        </div>
+      </div>
+
+      <!-- Maximum Steering Degree -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">
+            Max Steering Angle Range:
+            <span class="info-icon" title="1080° enables ±540° (3 full rotations lock-to-lock) like commercial trucks and GT cars. 900° is standard Logitech G29 lock.">ℹ️</span>
+          </span>
+          <span class="control-value-badge" id="lbl-max-deg">1080° (±540°)</span>
+        </div>
+        <div class="select-pill-group" id="group-steering-degrees">
+          <button class="select-pill active" data-val="1080">1080° (Full 3 Turns)</button>
+          <button class="select-pill" data-val="900">900° (G29 Default)</button>
+          <button class="select-pill" data-val="720">720°</button>
+          <button class="select-pill" data-val="540">540° (1.5 Turns)</button>
+          <button class="select-pill" data-val="360">360°</button>
+          <button class="select-pill" data-val="270">270°</button>
+          <button class="select-pill" data-val="180">180° (Arcade)</button>
+        </div>
+      </div>
+
+      <!-- Steering Sensitivity / Degree to Turn Ratio -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">
+            Steering Sensitivity Multiplier:
+            <span class="info-icon" title="Multiplier applied to virtual steering output. 1.00x is 1:1 true physical scale.">ℹ️</span>
+          </span>
+          <span class="control-value-badge" id="lbl-sens">1.00x</span>
+        </div>
+        <input type="range" id="rng-sens" min="20" max="300" value="100">
+        <div class="control-desc">Adjusts how fast the virtual axis responds to touch wheel rotation or phone tilt.</div>
+      </div>
+
+      <!-- Degree to Turn Ratio -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">
+            Degree-to-Turn Ratio Mode:
+            <span class="info-icon" title="Determines how many physical degrees equal full in-game lock. 1:1 gives authentic true rotation.">ℹ️</span>
+          </span>
+          <span class="control-value-badge" id="lbl-ratio">1:1 Direct (1080° = 100% Axis)</span>
+        </div>
+        <div class="select-pill-group" id="group-ratio-mode">
+          <button class="select-pill active" data-val="1.0">1:1 (True 1080° Sim)</button>
+          <button class="select-pill" data-val="1.2">1.2:1 (Fast Truck)</button>
+          <button class="select-pill" data-val="1.5">1.5:1 (Quick Response)</button>
+          <button class="select-pill" data-val="2.0">2.0:1 (High Speed)</button>
+        </div>
+      </div>
+
+      <!-- Linearity / Gamma Curve -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">
+            Steering Linearity Curve:
+            <span class="info-icon" title="1.00 is linear. Higher values provide high precision on straights with sharp turning at full lock.">ℹ️</span>
+          </span>
+          <span class="control-value-badge" id="lbl-linearity">Linear (1.00)</span>
+        </div>
+        <input type="range" id="rng-linearity" min="50" max="250" value="100">
+      </div>
+
+      <!-- Steering Deadzone -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">
+            Center Deadzone:
+            <span class="info-icon" title="Ignores small accidental touches or jitter around the center 0° neutral point.">ℹ️</span>
+          </span>
+          <span class="control-value-badge" id="lbl-deadzone">0%</span>
+        </div>
+        <input type="range" id="rng-deadzone" min="0" max="20" value="0">
+      </div>
+
+      <!-- Return to Center Speed -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">
+            Auto-Center Return Speed:
+            <span class="info-icon" title="How the steering wheel springs back to center when fingers release the screen.">ℹ️</span>
+          </span>
+          <span class="control-value-badge" id="lbl-return-speed">Realistic Smooth</span>
+        </div>
+        <div class="select-pill-group" id="group-return-speed">
+          <button class="select-pill" data-val="instant">Instant</button>
+          <button class="select-pill active" data-val="realistic">Realistic Smooth</button>
+          <button class="select-pill" data-val="slow">Gentle Slow</button>
+          <button class="select-pill" data-val="hold">Hold Angle (No Return)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: SENSORS & PEDALS & HAPTICS -->
+    <div class="card col-6">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            📐 Gyroscope, Pedals & Haptic Feedback
+            <span class="info-icon" title="Control hardware motion sensors, pedal travel linearity, and in-game Force Feedback rumble.">ℹ️</span>
+          </div>
+          <div class="card-subtitle">Calibrate phone tilt-to-steer, analog triggers, and vibration motors.</div>
+        </div>
+      </div>
+
+      <!-- Gyroscope Tilt-to-Steer -->
+      <div class="switch-row">
+        <div class="switch-label-block">
+          <span class="switch-label-title">
+            Tilt-to-Steer (Gyroscope)
+            <span class="info-icon" title="Allows steering by physically tilting your mobile phone horizontally like a real wheel.">ℹ️</span>
+          </span>
+          <span class="switch-label-sub">Use mobile accelerometer/gyro as a physical steering wheel</span>
+        </div>
+        <input type="checkbox" class="toggle-input" id="chk-gyro" checked>
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">
+            Gyro Max Tilt Range (Degrees for 100% Lock):
+            <span class="info-icon" title="Physical tilt angle of your device that reaches 100% virtual steering lock.">ℹ️</span>
+          </span>
+          <span class="control-value-badge" id="lbl-gyro-angle">±35°</span>
+        </div>
+        <input type="range" id="rng-gyro-angle" min="15" max="75" value="35">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">
+            Gyro Smoothing Filter (Alpha):
+            <span class="info-icon" title="Low-pass filter to smooth hand tremors while keeping low latency.">ℹ️</span>
+          </span>
+          <span class="control-value-badge" id="lbl-gyro-smooth">Medium (0.40)</span>
+        </div>
+        <input type="range" id="rng-gyro-smooth" min="10" max="90" value="40">
+      </div>
+
+      <!-- Haptics / Vibration Strength -->
+      <div class="switch-row">
+        <div class="switch-label-block">
+          <span class="switch-label-title">
+            Force Feedback Vibration (Haptics)
+            <span class="info-icon" title="Translates PC game crash, collision, RPM, and road rumble into phone haptic vibration pulses.">ℹ️</span>
+          </span>
+          <span class="switch-label-sub">Game rumble translates into phone haptic feedback</span>
+        </div>
+        <input type="checkbox" class="toggle-input" id="chk-vibrate" checked>
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">Haptic Vibration Strength:</span>
+          <span class="control-value-badge" id="lbl-vibrate-str">100%</span>
+        </div>
+        <input type="range" id="rng-vibrate-str" min="10" max="150" value="100">
+      </div>
+
+      <!-- Pedals Calibration -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">Throttle / Gas Sensitivity:</span>
+          <span class="control-value-badge" id="lbl-gas-sens">1.00x</span>
+        </div>
+        <input type="range" id="rng-gas-sens" min="50" max="150" value="100">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">Brake Pedal Sensitivity & Resistance:</span>
+          <span class="control-value-badge" id="lbl-brake-sens">1.00x</span>
+        </div>
+        <input type="range" id="rng-brake-sens" min="50" max="150" value="100">
+      </div>
+    </div>
+
+    <!-- 3. LIVE CONTROLLER INPUT VISUALIZER -->
+    <div class="card col-6">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            📡 Real-Time Controller Monitor (Active Slot)
+            <span class="info-icon" title="Live input tester showing real-time steering position, multi-turn 1080° angle, and pedal percentages.">ℹ️</span>
+          </div>
+          <div class="card-subtitle">Live 60 FPS visual telemetry of stick positions, pedals, and 1080° wheel.</div>
+        </div>
+        <select id="sel-vis-slot" style="background: rgba(0,0,0,0.5); color: #fff; border: 1px solid var(--border-color); border-radius: 8px; padding: 4px 8px; font-weight: bold;">
+          <option value="0">Slot P1</option>
+          <option value="1">Slot P2</option>
+          <option value="2">Slot P3</option>
+          <option value="3">Slot P4</option>
+        </select>
+      </div>
+
+      <div class="vis-container">
+        <div class="vis-axes-row">
+          <!-- Left Stick (Steering) -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div class="stick-tester">
+              <div class="stick-cross-h"></div>
+              <div class="stick-cross-v"></div>
+              <div class="stick-dot" id="vis-dot-l"></div>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; color: var(--text-muted);">STEER / LS</span>
+            <span style="font-size: 10px; font-family: 'JetBrains Mono';" id="vis-val-ls">X: 0.00 | Y: 0.00</span>
+          </div>
+
+          <!-- 1080° Steering Wheel Preview -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div class="wheel-preview-box">
+              <div class="wheel-preview-rim" id="vis-wheel-rim">
+                <div class="wheel-preview-mark"></div>
+                <div class="wheel-preview-hub" id="vis-wheel-deg">0.0°</div>
+              </div>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; color: var(--text-muted);">1080° WHEEL</span>
+          </div>
+
+          <!-- Pedals / Triggers Gauges -->
+          <div style="display: flex; gap: 10px; align-items: flex-end;">
+            <div class="trigger-gauge">
+              <div class="gauge-track"><div class="gauge-fill" id="vis-fill-clutch"></div></div>
+              <span class="gauge-label">CLT</span>
+            </div>
+            <div class="trigger-gauge">
+              <div class="gauge-track"><div class="gauge-fill" id="vis-fill-brake" style="background: #ef4444;"></div></div>
+              <span class="gauge-label">BRK</span>
+            </div>
+            <div class="trigger-gauge">
+              <div class="gauge-track"><div class="gauge-fill" id="vis-fill-gas" style="background: #10b981;"></div></div>
+              <span class="gauge-label">GAS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. CUSTOM BUTTON PAGE & COCKPIT STUDIO (SUPER BUILDER) -->
+    <div class="card studio-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            🎛️ Custom Button Page Builder & Cockpit Studio
+            <span class="info-icon" title="Create and customize bespoke button decks with any vehicle, sim, or gamepad action. These appear on the mobile controller's 'Custom Deck' layout.">ℹ️</span>
+          </div>
+          <div class="card-subtitle">Design your own personalized button boards, arrange custom layouts, and preview live on a simulated mobile screen.</div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-secondary" id="btn-export-decks">📥 Export JSON</button>
+          <button class="btn-secondary" id="btn-import-decks">📤 Import JSON</button>
+          <input type="file" id="file-import-decks" accept=".json" style="display: none;">
+          <button class="btn-primary" id="btn-save-decks-top">💾 Save & Sync Decks</button>
+        </div>
+      </div>
+
+      <!-- Deck Header / Switcher Bar -->
+      <div class="deck-header-bar">
+        <div class="deck-tabs-wrapper" id="deck-tabs-container">
+          <!-- Dynamically populated deck tabs -->
+        </div>
+
+        <div class="deck-controls-row">
+          <button class="btn-secondary" id="btn-add-deck" style="color: var(--accent-cyan);">➕ New Deck</button>
+          <button class="btn-secondary" id="btn-duplicate-deck">📋 Duplicate</button>
+          <button class="btn-secondary" id="btn-rename-deck">✏️ Rename</button>
+          <button class="btn-secondary" id="btn-delete-deck" style="color: #ef4444;">🗑️ Delete</button>
+          
+          <div style="display: flex; align-items: center; gap: 6px; margin-left: 8px;">
+            <span style="font-size: 11.5px; font-weight: 800; color: var(--text-muted);">Columns:</span>
+            <select id="sel-deck-columns" class="form-input-styled" style="width: 80px; padding: 4px 8px;">
+              <option value="2">2 Cols</option>
+              <option value="3">3 Cols</option>
+              <option value="4" selected>4 Cols</option>
+              <option value="5">5 Cols</option>
+              <option value="6">6 Cols</option>
+            </select>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 11.5px; font-weight: 800; color: var(--text-muted);">Templates:</span>
+            <select id="sel-deck-template" class="form-input-styled" style="width: 170px; padding: 4px 8px;">
+              <option value="">Load Template...</option>
+              <option value="essential_trucker">🚚 Essential Trucker</option>
+              <option value="heavy_retarder">🛑 Heavy Rig & Retarder</option>
+              <option value="highway_cruise">🛣️ Highway & Cruise</option>
+              <option value="convoy_streamer">🎙️ Convoy & Streamer</option>
+              <option value="gamepad_master">🎮 Gamepad Master</option>
+              <option value="blank">⭐ Blank Slate</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-Column Studio Layout -->
+      <div class="studio-layout-grid">
+        <!-- LEFT: Palette & Custom Button Creator -->
+        <div class="palette-col">
+          <div style="font-size: 13px; font-weight: 900; color: #fff; display: flex; align-items: center; justify-content: space-between;">
+            <span>📚 Button Library</span>
+            <span style="font-size: 10.5px; color: var(--text-dim);">Click + to add</span>
+          </div>
+
+          <!-- Custom Button Builder Form -->
+          <div class="custom-builder-box">
+            <span style="font-size: 12px; font-weight: 900; color: var(--accent-cyan);">✨ Custom Button Builder</span>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <input type="text" id="builder-label" class="form-input-styled" placeholder="Button Label (e.g. NITRO)" maxlength="20">
+              <input type="text" id="builder-sub" class="form-input-styled" placeholder="Sub-text (e.g. HOLD / PTT)" maxlength="15">
+              
+              <div style="display: flex; gap: 6px;">
+                <input type="text" id="builder-icon" class="form-input-styled" style="width: 70px; text-align: center; font-size: 16px;" value="⚡" maxlength="4" placeholder="Icon">
+                <select id="builder-mask" class="form-input-styled" style="flex: 1;">
+                  <!-- Dynamically populated bitmasks -->
+                </select>
+              </div>
+
+              <div style="display: flex; gap: 6px;">
+                <select id="builder-mode" class="form-input-styled" style="flex: 1;">
+                  <option value="toggle">Toggle (ON / OFF)</option>
+                  <option value="momentary">Momentary (Hold)</option>
+                </select>
+                <select id="builder-color" class="form-input-styled" style="flex: 1;">
+                  <option value="default">Clay Dark</option>
+                  <option value="emerald">Emerald Green</option>
+                  <option value="cyan">Cyan Electric</option>
+                  <option value="safety">Amber Safety</option>
+                  <option value="hazard">Hazard Pulse</option>
+                  <option value="danger">Danger Red</option>
+                  <option value="purple">Purple Neon</option>
+                </select>
+              </div>
+
+              <button class="btn-primary" id="btn-builder-add" style="padding: 8px; font-size: 12px; justify-content: center; margin-top: 4px;">+ Add Custom Button</button>
+            </div>
+          </div>
+
+          <!-- Accordion Categories for Library -->
+          <div id="palette-accordions-container" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Populated dynamically: Engine, Lights, Brakes, Cruise, Cabin, Trailer, Cameras, Gamepad -->
+          </div>
+        </div>
+
+        <!-- CENTER: Visual Deck Grid Editor -->
+        <div class="editor-col">
+          <div class="editor-toolbar">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 14px; font-weight: 900; color: #fff;" id="lbl-active-deck-title">Active Deck Editor</span>
+              <span class="control-value-badge" id="lbl-deck-button-count">0 Buttons</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-secondary" id="btn-clear-deck" style="padding: 4px 10px; font-size: 11px;">Clear All</button>
+            </div>
+          </div>
+
+          <div class="editor-grid-container" id="editor-deck-grid">
+            <!-- Buttons in active deck rendered here with reorder / edit / delete -->
+          </div>
+        </div>
+
+        <!-- RIGHT: Live Interactive Phone Simulator Preview -->
+        <div class="preview-col">
+          <div style="font-size: 13px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 6px;">
+            <span>📱 Live Mobile Preview</span>
+            <span class="info-icon" title="Test drag/pan in all directions, zoom, and tap buttons directly in this simulated phone viewport!">ℹ️</span>
+          </div>
+
+          <div class="phone-simulator-frame">
+            <div class="phone-notch-bar">
+              <div class="phone-notch-pill"></div>
+            </div>
+            
+            <div style="padding: 4px 8px; background: #0c1018; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-clay);">
+              <span style="font-size: 10px; font-weight: 800; color: var(--accent-cyan);" id="sim-deck-name">Deck</span>
+              <div style="display: flex; gap: 4px;">
+                <button class="canvas-tool-btn" id="sim-btn-fit" style="padding: 2px 5px; font-size: 9px;">Fit</button>
+                <button class="canvas-tool-btn" id="sim-btn-reset" style="padding: 2px 5px; font-size: 9px;">100%</button>
+              </div>
+            </div>
+
+            <div class="phone-screen-body" id="sim-viewport">
+              <div class="phone-sim-canvas" id="sim-canvas">
+                <!-- Dynamically synced buttons -->
+              </div>
+            </div>
+          </div>
+          <div style="font-size: 11px; color: var(--text-dim); text-align: center;">✋ Drag simulator screen to pan in all directions</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; border-top: 1.5px solid var(--border-clay); padding-top: 14px;">
+        <button class="btn-secondary" id="btn-reset-defaults">Reset All Config to Defaults</button>
+        <button class="btn-primary" id="btn-save-config">💾 Save & Sync All Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>mobicon-by shakbrotech — Designed for Simulation & Precision Gaming</div>
+    <div>GitHub Profile: <a href="https://github.com/shakeel-singalaxana" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan); text-decoration: none;">https://github.com/shakeel-singalaxana</a></div>
+  </footer>
+</div>
+
+<div id="toast">Configuration saved successfully!</div>
+
+<script>
+(() => {
+  // Configuration State & Defaults
+  const config = {
+    maxSteeringDegrees: 1080,
+    steeringSensitivity: 1.0,
+    degreeRatio: 1.0,
+    steeringLinearity: 1.0,
+    steeringDeadzone: 0,
+    returnSpeed: 'realistic',
+    gyroEnabled: true,
+    gyroAngleRange: 35,
+    gyroSmoothing: 0.40,
+    vibrateEnabled: true,
+    vibrateStrength: 100,
+    gasSensitivity: 1.0,
+    brakeSensitivity: 1.0,
+    clutchSensitivity: 1.0,
+    truckboxCategories: {
+      engine: true,
+      lights: true,
+      aux: true,
+      cruise: true,
+      cabin: true,
+      hud: true,
+      camera: true
+    }
+  };
+
+  // Load Saved Config from LocalStorage
+  try {
+    const saved = localStorage.getItem('mobicon_config');
+    if (saved) Object.assign(config, JSON.parse(saved));
+  } catch (e) {}
+
+  // UI Elements
+  const lblMaxDeg = document.getElementById('lbl-max-deg');
+  const lblSens = document.getElementById('lbl-sens');
+  const rngSens = document.getElementById('rng-sens');
+  const lblRatio = document.getElementById('lbl-ratio');
+  const lblLinearity = document.getElementById('lbl-linearity');
+  const rngLinearity = document.getElementById('rng-linearity');
+  const lblDeadzone = document.getElementById('lbl-deadzone');
+  const rngDeadzone = document.getElementById('rng-deadzone');
+  const chkGyro = document.getElementById('chk-gyro');
+  const lblGyroAngle = document.getElementById('lbl-gyro-angle');
+  const rngGyroAngle = document.getElementById('rng-gyro-angle');
+  const lblGyroSmooth = document.getElementById('lbl-gyro-smooth');
+  const rngGyroSmooth = document.getElementById('rng-gyro-smooth');
+  const chkVibrate = document.getElementById('chk-vibrate');
+  const lblVibrateStr = document.getElementById('lbl-vibrate-str');
+  const rngVibrateStr = document.getElementById('rng-vibrate-str');
+  const lblGasSens = document.getElementById('lbl-gas-sens');
+  const rngGasSens = document.getElementById('rng-gas-sens');
+  const lblBrakeSens = document.getElementById('lbl-brake-sens');
+  const rngBrakeSens = document.getElementById('rng-brake-sens');
+  const lblPrimaryUrl = document.getElementById('lbl-primary-url');
+
+  function applyConfigToUI() {
+    lblMaxDeg.textContent = `${config.maxSteeringDegrees}° (±${config.maxSteeringDegrees / 2}°)`;
+    document.querySelectorAll('#group-steering-degrees .select-pill').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.val, 10) === config.maxSteeringDegrees);
+    });
+
+    rngSens.value = Math.round(config.steeringSensitivity * 100);
+    lblSens.textContent = `${config.steeringSensitivity.toFixed(2)}x`;
+
+    document.querySelectorAll('#group-ratio-mode .select-pill').forEach(btn => {
+      btn.classList.toggle('active', parseFloat(btn.dataset.val) === config.degreeRatio);
+    });
+    lblRatio.textContent = `${config.degreeRatio}:1 Ratio`;
+
+    rngLinearity.value = Math.round(config.steeringLinearity * 100);
+    lblLinearity.textContent = config.steeringLinearity === 1 ? 'Linear (1.00)' : `${config.steeringLinearity.toFixed(2)}`;
+
+    rngDeadzone.value = config.steeringDeadzone;
+    lblDeadzone.textContent = `${config.steeringDeadzone}%`;
+
+    document.querySelectorAll('#group-return-speed .select-pill').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.val === config.returnSpeed);
+    });
+
+    chkGyro.checked = config.gyroEnabled;
+    rngGyroAngle.value = config.gyroAngleRange;
+    lblGyroAngle.textContent = `±${config.gyroAngleRange}°`;
+
+    rngGyroSmooth.value = Math.round(config.gyroSmoothing * 100);
+    lblGyroSmooth.textContent = `${config.gyroSmoothing.toFixed(2)}`;
+
+    chkVibrate.checked = config.vibrateEnabled;
+    rngVibrateStr.value = config.vibrateStrength;
+    lblVibrateStr.textContent = `${config.vibrateStrength}%`;
+
+    rngGasSens.value = Math.round(config.gasSensitivity * 100);
+    lblGasSens.textContent = `${config.gasSensitivity.toFixed(2)}x`;
+
+    rngBrakeSens.value = Math.round(config.brakeSensitivity * 100);
+    lblBrakeSens.textContent = `${config.brakeSensitivity.toFixed(2)}x`;
+
+    document.querySelectorAll('#truckbox-categories-list input[type="checkbox"]').forEach(chk => {
+      const cat = chk.dataset.cat;
+      if (cat in config.truckboxCategories) {
+        chk.checked = config.truckboxCategories[cat];
+      }
+    });
+  }
+  applyConfigToUI();
+
+  // Event Listeners for UI Inputs
+  document.querySelectorAll('#group-steering-degrees .select-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      config.maxSteeringDegrees = parseInt(btn.dataset.val, 10);
+      applyConfigToUI();
+      saveConfig();
+    });
+  });
+
+  rngSens.addEventListener('input', (e) => {
+    config.steeringSensitivity = e.target.value / 100;
+    lblSens.textContent = `${config.steeringSensitivity.toFixed(2)}x`;
+  });
+
+  document.querySelectorAll('#group-ratio-mode .select-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      config.degreeRatio = parseFloat(btn.dataset.val);
+      applyConfigToUI();
+      saveConfig();
+    });
+  });
+
+  rngLinearity.addEventListener('input', (e) => {
+    config.steeringLinearity = e.target.value / 100;
+    lblLinearity.textContent = config.steeringLinearity === 1 ? 'Linear (1.00)' : `${config.steeringLinearity.toFixed(2)}`;
+  });
+
+  rngDeadzone.addEventListener('input', (e) => {
+    config.steeringDeadzone = parseInt(e.target.value, 10);
+    lblDeadzone.textContent = `${config.steeringDeadzone}%`;
+  });
+
+  document.querySelectorAll('#group-return-speed .select-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      config.returnSpeed = btn.dataset.val;
+      applyConfigToUI();
+      saveConfig();
+    });
+  });
+
+  chkGyro.addEventListener('change', (e) => config.gyroEnabled = e.target.checked);
+  rngGyroAngle.addEventListener('input', (e) => {
+    config.gyroAngleRange = parseInt(e.target.value, 10);
+    lblGyroAngle.textContent = `±${config.gyroAngleRange}°`;
+  });
+  rngGyroSmooth.addEventListener('input', (e) => {
+    config.gyroSmoothing = e.target.value / 100;
+    lblGyroSmooth.textContent = `${config.gyroSmoothing.toFixed(2)}`;
+  });
+
+  chkVibrate.addEventListener('change', (e) => config.vibrateEnabled = e.target.checked);
+  rngVibrateStr.addEventListener('input', (e) => {
+    config.vibrateStrength = parseInt(e.target.value, 10);
+    lblVibrateStr.textContent = `${config.vibrateStrength}%`;
+  });
+
+  rngGasSens.addEventListener('input', (e) => {
+    config.gasSensitivity = e.target.value / 100;
+    lblGasSens.textContent = `${config.gasSensitivity.toFixed(2)}x`;
+  });
+  rngBrakeSens.addEventListener('input', (e) => {
+    config.brakeSensitivity = e.target.value / 100;
+    lblBrakeSens.textContent = `${config.brakeSensitivity.toFixed(2)}x`;
+  });
+
+  document.querySelectorAll('#truckbox-categories-list input[type="checkbox"]').forEach(chk => {
+    chk.addEventListener('change', (e) => {
+      config.truckboxCategories[chk.dataset.cat] = e.target.checked;
+    });
+  });
+
+  // =========================================================================
+  // CUSTOM BUTTON PAGE BUILDER & COCKPIT STUDIO CONTROLLER
+  // =========================================================================
+  const BUTTON_DEFINITIONS = [
+    // Engine & Transmission
+    { cat: 'Engine & Gear', icon: '⚡', label: 'ENGINE START', sub: 'TOGGLE', mask: 1 << 15, toggle: true, color: 'emerald' },
+    { cat: 'Engine & Gear', icon: '🔑', label: 'IGNITION ELEC', sub: 'TOGGLE', mask: 1 << 14, toggle: true, color: 'default' },
+    { cat: 'Engine & Gear', icon: '🛑', label: 'HANDBRAKE', sub: 'PARK', mask: 1 << 19, toggle: true, color: 'safety' },
+    { cat: 'Engine & Gear', icon: '⬆️', label: 'SHIFT UP', sub: 'PADDLE', mask: 1 << 20, toggle: false, color: 'default' },
+    { cat: 'Engine & Gear', icon: '⬇️', label: 'SHIFT DOWN', sub: 'PADDLE', mask: 1 << 21, toggle: false, color: 'default' },
+    { cat: 'Engine & Gear', icon: '🔄', label: 'GEARBOX MODE', sub: 'AUTO/SEQ', mask: 1 << 22, toggle: true, color: 'default' },
+    { cat: 'Engine & Gear', icon: '🅳', label: 'SHIFT DRIVE', sub: 'GEAR D', mask: 1 << 22, toggle: false, color: 'cyan' },
+    { cat: 'Engine & Gear', icon: '🅽', label: 'SHIFT NEUTRAL', sub: 'GEAR N', mask: 1 << 6, toggle: false, color: 'default' },
+    { cat: 'Engine & Gear', icon: '🆁', label: 'SHIFT REVERSE', sub: 'GEAR R', mask: 1 << 28, toggle: false, color: 'danger' },
+    { cat: 'Engine & Gear', icon: '⚙️', label: 'ADAPTIVE TRANS', sub: 'MODE', mask: 1 << 23, toggle: true, color: 'default' },
+    { cat: 'Engine & Gear', icon: '🎚️', label: 'RANGE HI/LO', sub: 'SPLIT', mask: 1 << 24, toggle: true, color: 'default' },
+    { cat: 'Engine & Gear', icon: '🔀', label: 'SPLITTER HI/LO', sub: 'SPLIT', mask: 1 << 25, toggle: true, color: 'default' },
+
+    // Lights & Visibility
+    { cat: 'Lights & Visibility', icon: '💡', label: 'LIGHTS MODE', sub: 'CYCLE', mask: 1 << 16, toggle: false, color: 'cyan' },
+    { cat: 'Lights & Visibility', icon: '🔦', label: 'HIGH BEAMS', sub: 'TOGGLE', mask: 1 << 17, toggle: true, color: 'cyan' },
+    { cat: 'Lights & Visibility', icon: '⚡', label: 'LIGHT HORN', sub: 'FLASH', mask: 1 << 15, toggle: false, color: 'cyan' },
+    { cat: 'Lights & Visibility', icon: '⬅️', label: 'LEFT SIGNAL', sub: 'BLINK', mask: 1 << 12, toggle: true, color: 'emerald' },
+    { cat: 'Lights & Visibility', icon: '⚠️', label: 'HAZARDS', sub: 'EMERGENCY', mask: 1 << 18, toggle: true, color: 'hazard' },
+    { cat: 'Lights & Visibility', icon: '➡️', label: 'RIGHT SIGNAL', sub: 'BLINK', mask: 1 << 13, toggle: true, color: 'emerald' },
+    { cat: 'Lights & Visibility', icon: '🚨', label: 'BEACONS', sub: 'STROBE', mask: 1 << 26, toggle: true, color: 'amber' },
+    { cat: 'Lights & Visibility', icon: '🌧️', label: 'WIPERS +', sub: 'SPEED UP', mask: 1 << 17, toggle: false, color: 'default' },
+    { cat: 'Lights & Visibility', icon: '☀️', label: 'WIPERS -', sub: 'SPEED DN', mask: 1 << 16, toggle: false, color: 'default' },
+    { cat: 'Lights & Visibility', icon: '🪟', label: 'WIN LEFT OPEN', sub: 'WINDOW', mask: 1 << 10, toggle: false, color: 'default' },
+    { cat: 'Lights & Visibility', icon: '🪟', label: 'WIN LEFT CLOSE', sub: 'WINDOW', mask: 1 << 11, toggle: false, color: 'default' },
+    { cat: 'Lights & Visibility', icon: '🪟', label: 'WIN RIGHT OPEN', sub: 'WINDOW', mask: 1 << 12, toggle: false, color: 'default' },
+
+    // Auxiliary Brakes, Axles & Susp
+    { cat: 'Brakes & Axles', icon: '⚡', label: 'ENGINE BRAKE', sub: 'JAKE TOGGLE', mask: 1 << 19, toggle: true, color: 'amber' },
+    { cat: 'Brakes & Axles', icon: '➕', label: 'ENG BRAKE +', sub: 'LEVEL UP', mask: 1 << 10, toggle: false, color: 'default' },
+    { cat: 'Brakes & Axles', icon: '➖', label: 'ENG BRAKE -', sub: 'LEVEL DN', mask: 1 << 11, toggle: false, color: 'default' },
+    { cat: 'Brakes & Axles', icon: '🎚️', label: 'RETARDER +', sub: 'STG UP', mask: 1 << 5, toggle: false, color: 'default' },
+    { cat: 'Brakes & Axles', icon: '🎚️', label: 'RETARDER -', sub: 'STG DN', mask: 1 << 4, toggle: false, color: 'default' },
+    { cat: 'Brakes & Axles', icon: '🤖', label: 'AUTO RETARDER', sub: 'SMART', mask: 1 << 27, toggle: true, color: 'cyan' },
+    { cat: 'Brakes & Axles', icon: '⬆️', label: 'TRUCK AXLE', sub: 'LIFT', mask: 1 << 28, toggle: true, color: 'default' },
+    { cat: 'Brakes & Axles', icon: '⬆️', label: 'TRAILER AXLE', sub: 'LIFT', mask: 1 << 29, toggle: true, color: 'default' },
+    { cat: 'Brakes & Axles', icon: '🔒', label: 'DIFF LOCK', sub: 'TRACTION', mask: 1 << 29, toggle: true, color: 'safety' },
+    { cat: 'Brakes & Axles', icon: '⏫', label: 'SUSP UP', sub: 'AIR SUSP', mask: 1 << 8, toggle: false, color: 'default' },
+    { cat: 'Brakes & Axles', icon: '⏬', label: 'SUSP DOWN', sub: 'AIR SUSP', mask: 1 << 9, toggle: false, color: 'default' },
+    { cat: 'Brakes & Axles', icon: '🔄', label: 'SUSP RESET', sub: 'DEFAULT', mask: 1 << 7, toggle: false, color: 'default' },
+
+    // Cruise Control & Assistants
+    { cat: 'Cruise & Assist', icon: '🎯', label: 'CRUISE ON/OFF', sub: 'CC TOGGLE', mask: 1 << 31, toggle: true, color: 'emerald' },
+    { cat: 'Cruise & Assist', icon: '🔄', label: 'CRUISE RESUME', sub: 'SET RES', mask: 1 << 0, toggle: false, color: 'default' },
+    { cat: 'Cruise & Assist', icon: '📡', label: 'ADAPTIVE CRUISE', sub: 'RADAR CC', mask: 1 << 13, toggle: true, color: 'cyan' },
+    { cat: 'Cruise & Assist', icon: '➕', label: 'CC SPEED +', sub: 'ACCEL', mask: 1 << 3, toggle: false, color: 'default' },
+    { cat: 'Cruise & Assist', icon: '➖', label: 'CC SPEED -', sub: 'DECEL', mask: 1 << 2, toggle: false, color: 'default' },
+    { cat: 'Cruise & Assist', icon: '🛑', label: 'EMERGENCY BRK', sub: 'STOP', mask: 1 << 1, toggle: true, color: 'danger' },
+    { cat: 'Cruise & Assist', icon: '🛣️', label: 'LANE ASSIST', sub: 'MODE', mask: 1 << 20, toggle: true, color: 'default' },
+    { cat: 'Cruise & Assist', icon: '📐', label: 'LANE KEEPING', sub: 'AUTO', mask: 1 << 21, toggle: true, color: 'default' },
+
+    // Cabin, Audio & Horns
+    { cat: 'Cabin & Audio', icon: '🔊', label: 'CITY HORN', sub: 'BEEP', mask: 1 << 15, toggle: false, color: 'default' },
+    { cat: 'Cabin & Audio', icon: '📢', label: 'AIR HORN', sub: 'BLAST', mask: 1 << 30, toggle: false, color: 'danger' },
+    { cat: 'Cabin & Audio', icon: '📻', label: 'RADIO ON/OFF', sub: 'MEDIA', mask: 1 << 3, toggle: true, color: 'purple' },
+    { cat: 'Cabin & Audio', icon: '🔊', label: 'VOLUME +', sub: 'AUDIO', mask: 1 << 10, toggle: false, color: 'default' },
+    { cat: 'Cabin & Audio', icon: '🔉', label: 'VOLUME -', sub: 'AUDIO', mask: 1 << 11, toggle: false, color: 'default' },
+    { cat: 'Cabin & Audio', icon: '⏭️', label: 'NEXT STATION', sub: 'SEEK', mask: 1 << 13, toggle: false, color: 'default' },
+    { cat: 'Cabin & Audio', icon: '🖥️', label: 'DASH MODE', sub: 'CYCLE', mask: 1 << 6, toggle: false, color: 'default' },
+    { cat: 'Cabin & Audio', icon: '📱', label: 'INFOTAINMENT', sub: 'SCREEN', mask: 1 << 5, toggle: false, color: 'default' },
+    { cat: 'Cabin & Audio', icon: '🔄', label: 'TRIP RESET', sub: 'ODO', mask: 1 << 4, toggle: false, color: 'default' },
+
+    // Trailer & HUD Management
+    { cat: 'Trailer & HUD', icon: '🔗', label: 'ATTACH TRAILER', sub: 'COUPLE', mask: 1 << 30, toggle: true, color: 'safety' },
+    { cat: 'Trailer & HUD', icon: '🪞', label: 'MIRRORS (F2)', sub: 'HUD F2', mask: 1 << 2, toggle: false, color: 'default' },
+    { cat: 'Trailer & HUD', icon: '🗺️', label: 'ROUTE ADVISOR', sub: 'HUD F3', mask: 1 << 1, toggle: false, color: 'cyan' },
+    { cat: 'Trailer & HUD', icon: '🛠️', label: 'TRUCK MENU', sub: 'HUD F4', mask: 1 << 0, toggle: false, color: 'default' },
+    { cat: 'Trailer & HUD', icon: '🖱️', label: 'ADVISOR MOUSE', sub: 'CURSOR', mask: 1 << 8, toggle: false, color: 'default' },
+    { cat: 'Trailer & HUD', icon: '🔍', label: 'MAP ZOOM IN', sub: 'ZOOM +', mask: 1 << 9, toggle: false, color: 'default' },
+    { cat: 'Trailer & HUD', icon: '🔎', label: 'MAP ZOOM OUT', sub: 'ZOOM -', mask: 1 << 4, toggle: false, color: 'default' },
+    { cat: 'Trailer & HUD', icon: '📄', label: 'JOB / DAMAGE', sub: 'INFO', mask: 1 << 6, toggle: false, color: 'default' },
+    { cat: 'Trailer & HUD', icon: '📊', label: 'DIAGNOSTICS', sub: 'TELEMETRY', mask: 1 << 7, toggle: false, color: 'default' },
+
+    // Cameras & Convoy
+    { cat: 'Cameras & Convoy', icon: '1️⃣', label: 'CABIN CAM (1)', sub: 'INTERIOR', mask: 1 << 22, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '2️⃣', label: 'CHASE CAM (2)', sub: 'BEHIND', mask: 1 << 23, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '3️⃣', label: 'TOP-DOWN (3)', sub: 'AERIAL', mask: 1 << 24, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '4️⃣', label: 'ROOF CAM (4)', sub: 'ROOF', mask: 1 << 25, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '5️⃣', label: 'LEAN OUT (5)', sub: 'WINDOW', mask: 1 << 26, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '6️⃣', label: 'BUMPER CAM (6)', sub: 'FRONT', mask: 1 << 27, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '👀', label: 'LOOK LEFT', sub: 'PAN', mask: 1 << 12, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '👀', label: 'LOOK FORWARD', sub: 'PAN', mask: 1 << 10, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '👀', label: 'LOOK RIGHT', sub: 'PAN', mask: 1 << 13, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '🔎', label: 'ZOOM INTERIOR', sub: 'FOCUS', mask: 1 << 9, toggle: false, color: 'default' },
+    { cat: 'Cameras & Convoy', icon: '🎙️', label: 'CB RADIO PTT', sub: 'HOLD', mask: 1 << 8, toggle: false, color: 'danger' },
+    { cat: 'Cameras & Convoy', icon: '💬', label: 'CONVOY CHAT', sub: 'CHAT', mask: 1 << 14, toggle: true, color: 'purple' },
+
+    // Gamepad Inputs
+    { cat: 'Gamepad Controls', icon: '🅰️', label: 'BUTTON A', sub: 'CROSS', mask: 1 << 0, toggle: false, color: 'emerald' },
+    { cat: 'Gamepad Controls', icon: '🅱️', label: 'BUTTON B', sub: 'CIRCLE', mask: 1 << 1, toggle: false, color: 'danger' },
+    { cat: 'Gamepad Controls', icon: '🆇', label: 'BUTTON X', sub: 'SQUARE', mask: 1 << 2, toggle: false, color: 'cyan' },
+    { cat: 'Gamepad Controls', icon: '🆈', label: 'BUTTON Y', sub: 'TRIANGLE', mask: 1 << 3, toggle: false, color: 'amber' },
+    { cat: 'Gamepad Controls', icon: '🅻', label: 'BUMPER LB', sub: 'L1', mask: 1 << 4, toggle: false, color: 'default' },
+    { cat: 'Gamepad Controls', icon: '🆁', label: 'BUMPER RB', sub: 'R1', mask: 1 << 5, toggle: false, color: 'default' },
+    { cat: 'Gamepad Controls', icon: '◀', label: 'VIEW / BACK', sub: 'SHARE', mask: 1 << 6, toggle: false, color: 'default' },
+    { cat: 'Gamepad Controls', icon: '▶', label: 'MENU / START', sub: 'OPTIONS', mask: 1 << 7, toggle: false, color: 'default' },
+    { cat: 'Gamepad Controls', icon: '🔘', label: 'STICK CLICK L3', sub: 'L3', mask: 1 << 8, toggle: false, color: 'default' },
+    { cat: 'Gamepad Controls', icon: '🔘', label: 'STICK CLICK R3', sub: 'R3', mask: 1 << 9, toggle: false, color: 'default' },
+    { cat: 'Gamepad Controls', icon: '🌐', label: 'GUIDE / HOME', sub: 'PS / XBOX', mask: 1 << 14, toggle: true, color: 'cyan' }
+  ];
+
+  const PRESET_TEMPLATES = {
+    essential_trucker: {
+      name: '🚚 Essential Trucker Pro',
+      columns: 4,
+      buttons: [
+        { label: 'ENGINE START', sub: 'TOGGLE', icon: '⚡', mask: 1 << 15, toggle: true, color: 'emerald' },
+        { label: 'HANDBRAKE', sub: 'PARK', icon: '🛑', mask: 1 << 19, toggle: true, color: 'safety' },
+        { label: 'HAZARDS', sub: 'WARN', icon: '⚠️', mask: 1 << 18, toggle: true, color: 'hazard' },
+        { label: 'AIR HORN', sub: 'BLAST', icon: '📢', mask: 1 << 30, toggle: false, color: 'cyan' },
+        { label: 'HEADLIGHTS', sub: 'MODE', icon: '💡', mask: 1 << 16, toggle: false, color: 'cyan' },
+        { label: 'HIGH BEAMS', sub: 'MAIN', icon: '🔦', mask: 1 << 17, toggle: true, color: 'cyan' },
+        { label: 'BEACONS', sub: 'ROOF', icon: '🚨', mask: 1 << 26, toggle: true, color: 'amber' },
+        { label: 'WIPERS +', sub: 'RAIN', icon: '🌧️', mask: 1 << 16, toggle: false, color: 'default' },
+        { label: 'DIFF LOCK', sub: 'AXLE', icon: '🔒', mask: 1 << 29, toggle: true, color: 'amber' },
+        { label: 'RETARDER +', sub: 'BRAKE', icon: '🎚️', mask: 1 << 5, toggle: false, color: 'default' },
+        { label: 'RETARDER -', sub: 'BRAKE', icon: '🎚️', mask: 1 << 4, toggle: false, color: 'default' },
+        { label: 'CRUISE ON', sub: 'CC', icon: '🎯', mask: 1 << 31, toggle: true, color: 'emerald' },
+        { label: 'CC RESUME', sub: 'SET', icon: '🔄', mask: 1 << 0, toggle: false, color: 'default' },
+        { label: 'TRAILER', sub: 'COUPLE', icon: '🔗', mask: 1 << 30, toggle: true, color: 'safety' },
+        { label: 'ROUTE GPS', sub: 'F3', icon: '🗺️', mask: 1 << 1, toggle: false, color: 'default' },
+        { label: 'CB RADIO', sub: 'PTT', icon: '🎙️', mask: 1 << 8, toggle: false, color: 'danger' }
+      ]
+    },
+    heavy_retarder: {
+      name: '🛑 Heavy Rig & Retarder',
+      columns: 3,
+      buttons: [
+        { label: 'ENGINE BRAKE', sub: 'JAKE', icon: '⚡', mask: 1 << 19, toggle: true, color: 'amber' },
+        { label: 'ENG BRAKE +', sub: 'LEVEL', icon: '➕', mask: 1 << 10, toggle: false, color: 'default' },
+        { label: 'ENG BRAKE -', sub: 'LEVEL', icon: '➖', mask: 1 << 11, toggle: false, color: 'default' },
+        { label: 'RETARDER +', sub: 'STG', icon: '🎚️', mask: 1 << 5, toggle: false, color: 'default' },
+        { label: 'RETARDER -', sub: 'STG', icon: '🎚️', mask: 1 << 4, toggle: false, color: 'default' },
+        { label: 'AUTO RETARDER', sub: 'SMART', icon: '🤖', mask: 1 << 27, toggle: true, color: 'cyan' },
+        { label: 'DIFF LOCK', sub: 'TRACTION', icon: '🔒', mask: 1 << 29, toggle: true, color: 'safety' },
+        { label: 'TRUCK AXLE', sub: 'LIFT', icon: '⬆️', mask: 1 << 28, toggle: true, color: 'default' },
+        { label: 'TRAILER AXLE', sub: 'LIFT', icon: '⬆️', mask: 1 << 29, toggle: true, color: 'default' },
+        { label: 'EMERGENCY BRK', sub: 'STOP', icon: '🛑', mask: 1 << 1, toggle: true, color: 'danger' },
+        { label: 'HAZARDS', sub: 'PULSE', icon: '⚠️', mask: 1 << 18, toggle: true, color: 'hazard' },
+        { label: 'AIR HORN', sub: 'BLAST', icon: '📢', mask: 1 << 30, toggle: false, color: 'danger' }
+      ]
+    },
+    highway_cruise: {
+      name: '🛣️ Highway & Cruise Master',
+      columns: 4,
+      buttons: [
+        { label: 'CRUISE ON/OFF', sub: 'CC TOGGLE', icon: '🎯', mask: 1 << 31, toggle: true, color: 'emerald' },
+        { label: 'CRUISE RESUME', sub: 'SET RES', icon: '🔄', mask: 1 << 0, toggle: false, color: 'default' },
+        { label: 'CC SPEED +', sub: 'ACCEL', icon: '➕', mask: 1 << 3, toggle: false, color: 'default' },
+        { label: 'CC SPEED -', sub: 'DECEL', icon: '➖', mask: 1 << 2, toggle: false, color: 'default' },
+        { label: 'ADAPTIVE CRUISE', sub: 'RADAR CC', icon: '📡', mask: 1 << 13, toggle: true, color: 'cyan' },
+        { label: 'LANE KEEPING', sub: 'AUTO', icon: '📐', mask: 1 << 21, toggle: true, color: 'default' },
+        { label: 'HEADLIGHTS', sub: 'MODE', icon: '💡', mask: 1 << 16, toggle: false, color: 'cyan' },
+        { label: 'HIGH BEAMS', sub: 'MAIN', icon: '🔦', mask: 1 << 17, toggle: true, color: 'cyan' },
+        { label: 'WIPERS +', sub: 'RAIN', icon: '🌧️', mask: 1 << 16, toggle: false, color: 'default' },
+        { label: 'ROUTE GPS', sub: 'F3', icon: '🗺️', mask: 1 << 1, toggle: false, color: 'cyan' },
+        { label: 'TRUCK MENU', sub: 'F4', icon: '🛠️', mask: 1 << 0, toggle: false, color: 'default' },
+        { label: 'RADIO ON/OFF', sub: 'MEDIA', icon: '📻', mask: 1 << 3, toggle: true, color: 'purple' }
+      ]
+    },
+    convoy_streamer: {
+      name: '🎙️ Streamer & Convoy Cockpit',
+      columns: 4,
+      buttons: [
+        { label: 'CB RADIO PTT', sub: 'HOLD TO TALK', icon: '🎙️', mask: 1 << 8, toggle: false, color: 'danger' },
+        { label: 'CONVOY CHAT', sub: 'PLAYERS', icon: '💬', mask: 1 << 14, toggle: true, color: 'purple' },
+        { label: 'BEACONS', sub: 'STROBE', icon: '🚨', mask: 1 << 26, toggle: true, color: 'amber' },
+        { label: 'HAZARDS', sub: 'PULSE', icon: '⚠️', mask: 1 << 18, toggle: true, color: 'hazard' },
+        { label: 'CABIN CAM (1)', sub: 'INTERIOR', icon: '1️⃣', mask: 1 << 22, toggle: false, color: 'default' },
+        { label: 'CHASE CAM (2)', sub: 'BEHIND', icon: '2️⃣', mask: 1 << 23, toggle: false, color: 'default' },
+        { label: 'LEAN OUT (5)', sub: 'WINDOW', icon: '5️⃣', mask: 1 << 26, toggle: false, color: 'default' },
+        { label: 'BUMPER CAM (6)', sub: 'FRONT', icon: '6️⃣', mask: 1 << 27, toggle: false, color: 'default' },
+        { label: 'LOOK LEFT', sub: 'PAN', icon: '👀', mask: 1 << 12, toggle: false, color: 'default' },
+        { label: 'LOOK FORWARD', sub: 'PAN', icon: '👀', mask: 1 << 10, toggle: false, color: 'default' },
+        { label: 'LOOK RIGHT', sub: 'PAN', icon: '👀', mask: 1 << 13, toggle: false, color: 'default' },
+        { label: 'AIR HORN', sub: 'BLAST', icon: '📢', mask: 1 << 30, toggle: false, color: 'danger' }
+      ]
+    },
+    gamepad_master: {
+      name: '🎮 Gamepad Master Deck',
+      columns: 4,
+      buttons: [
+        { label: 'BUTTON A', sub: 'CROSS', icon: '🅰️', mask: 1 << 0, toggle: false, color: 'emerald' },
+        { label: 'BUTTON B', sub: 'CIRCLE', icon: '🅱️', mask: 1 << 1, toggle: false, color: 'danger' },
+        { label: 'BUTTON X', sub: 'SQUARE', icon: '🆇', mask: 1 << 2, toggle: false, color: 'cyan' },
+        { label: 'BUTTON Y', sub: 'TRIANGLE', icon: '🆈', mask: 1 << 3, toggle: false, color: 'amber' },
+        { label: 'BUMPER LB', sub: 'L1', icon: '🅻', mask: 1 << 4, toggle: false, color: 'default' },
+        { label: 'BUMPER RB', sub: 'R1', icon: '🆁', mask: 1 << 5, toggle: false, color: 'default' },
+        { label: 'VIEW / BACK', sub: 'SHARE', icon: '◀', mask: 1 << 6, toggle: false, color: 'default' },
+        { label: 'MENU / START', sub: 'OPTIONS', icon: '▶', mask: 1 << 7, toggle: false, color: 'default' },
+        { label: 'L-STICK CLICK', sub: 'L3', icon: '🔘', mask: 1 << 8, toggle: false, color: 'default' },
+        { label: 'R-STICK CLICK', sub: 'R3', icon: '🔘', mask: 1 << 9, toggle: false, color: 'default' },
+        { label: 'GUIDE / HOME', sub: 'XBOX/PS', icon: '🌐', mask: 1 << 14, toggle: true, color: 'cyan' },
+        { label: 'HANDBRAKE', sub: 'PARK', icon: '🛑', mask: 1 << 19, toggle: true, color: 'safety' }
+      ]
+    },
+    blank: {
+      name: '⭐ Custom Clean Slate',
+      columns: 4,
+      buttons: []
+    }
+  };
+
+  // State
+  let customDecks = [
+    JSON.parse(JSON.stringify(PRESET_TEMPLATES.essential_trucker)),
+    JSON.parse(JSON.stringify(PRESET_TEMPLATES.heavy_retarder)),
+    JSON.parse(JSON.stringify(PRESET_TEMPLATES.highway_cruise))
+  ];
+  customDecks[0].id = 'deck_pro_cockpit';
+  customDecks[1].id = 'deck_heavy_haul';
+  customDecks[2].id = 'deck_highway_cruise';
+
+  let activeDeckId = customDecks[0].id;
+
+  // Load custom decks from LocalStorage
+  try {
+    const savedDecks = localStorage.getItem('mobicon_custom_decks');
+    if (savedDecks) {
+      const parsed = JSON.parse(savedDecks);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        customDecks = parsed;
+      }
+    }
+    const savedActive = localStorage.getItem('mobicon_active_deck');
+    if (savedActive && customDecks.some(d => d.id === savedActive)) {
+      activeDeckId = savedActive;
+    } else {
+      activeDeckId = customDecks[0].id;
+    }
+  } catch (e) {}
+
+  function getActiveDeck() {
+    return customDecks.find(d => d.id === activeDeckId) || customDecks[0];
+  }
+
+  // Populate Builder Bitmask Dropdown
+  const builderMaskSel = document.getElementById('builder-mask');
+  if (builderMaskSel) {
+    builderMaskSel.innerHTML = '';
+    BUTTON_DEFINITIONS.forEach(def => {
+      const opt = document.createElement('option');
+      opt.value = def.mask;
+      opt.textContent = `${def.label} (${def.cat})`;
+      builderMaskSel.appendChild(opt);
+    });
+  }
+
+  // Populate Palette Accordions
+  function renderPalette() {
+    const container = document.getElementById('palette-accordions-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const cats = {};
+    BUTTON_DEFINITIONS.forEach(b => {
+      if (!cats[b.cat]) cats[b.cat] = [];
+      cats[b.cat].push(b);
+    });
+
+    Object.entries(cats).forEach(([catName, btns]) => {
+      const acc = document.createElement('div');
+      acc.className = 'palette-accordion';
+      
+      const header = document.createElement('div');
+      header.className = 'palette-acc-header';
+      header.innerHTML = `<span>${catName}</span> <span style="font-size: 10px; opacity: 0.7;">▼</span>`;
+
+      const body = document.createElement('div');
+      body.className = 'palette-acc-body';
+
+      btns.forEach(b => {
+        const item = document.createElement('button');
+        item.className = 'btn-palette-add';
+        item.innerHTML = `<span>${b.icon}</span><span>${b.label}</span>`;
+        item.title = `Add "${b.label}" to active deck`;
+        item.addEventListener('click', () => {
+          addButtonToActiveDeck(JSON.parse(JSON.stringify(b)));
+        });
+        body.appendChild(item);
+      });
+
+      header.addEventListener('click', () => {
+        body.style.display = body.style.display === 'none' ? 'grid' : 'none';
+      });
+
+      acc.appendChild(header);
+      acc.appendChild(body);
+      container.appendChild(acc);
+    });
+  }
+  renderPalette();
+
+  // Add button from palette
+  function addButtonToActiveDeck(buttonObj) {
+    const deck = getActiveDeck();
+    if (!deck.buttons) deck.buttons = [];
+    deck.buttons.push(buttonObj);
+    renderStudioUI();
+    saveAllDecks();
+    showToast(`Added "${buttonObj.label}" to ${deck.name}!`);
+  }
+
+  // Custom Button Builder Form Add
+  document.getElementById('btn-builder-add').addEventListener('click', () => {
+    const label = document.getElementById('builder-label').value.trim() || 'CUSTOM';
+    const sub = document.getElementById('builder-sub').value.trim() || '';
+    const icon = document.getElementById('builder-icon').value.trim() || '🔘';
+    const mask = parseInt(document.getElementById('builder-mask').value, 10) || (1 << 0);
+    const mode = document.getElementById('builder-mode').value;
+    const color = document.getElementById('builder-color').value;
+
+    addButtonToActiveDeck({
+      label,
+      sub,
+      icon,
+      mask,
+      toggle: mode === 'toggle',
+      color
+    });
+
+    document.getElementById('builder-label').value = '';
+    document.getElementById('builder-sub').value = '';
+  });
+
+  // Render Studio UI (Tabs, Grid Editor, and Live Phone Simulator)
+  function renderStudioUI() {
+    const deck = getActiveDeck();
+
+    // 1. Deck Tabs
+    const tabsContainer = document.getElementById('deck-tabs-container');
+    if (tabsContainer) {
+      tabsContainer.innerHTML = '';
+      customDecks.forEach(d => {
+        const tab = document.createElement('button');
+        tab.className = `deck-tab-pill ${d.id === activeDeckId ? 'active' : ''}`;
+        tab.textContent = d.name || 'Deck';
+        tab.addEventListener('click', () => {
+          activeDeckId = d.id;
+          localStorage.setItem('mobicon_active_deck', activeDeckId);
+          renderStudioUI();
+        });
+        tabsContainer.appendChild(tab);
+      });
+    }
+
+    // Controls
+    document.getElementById('lbl-active-deck-title').textContent = `${deck.name}`;
+    document.getElementById('lbl-deck-button-count').textContent = `${(deck.buttons || []).length} Buttons`;
+    document.getElementById('sel-deck-columns').value = (deck.columns || 4).toString();
+    document.getElementById('sim-deck-name').textContent = deck.name;
+
+    // 2. Editor Grid
+    const editorGrid = document.getElementById('editor-deck-grid');
+    if (editorGrid) {
+      editorGrid.innerHTML = '';
+      const cols = deck.columns || 4;
+      editorGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+      (deck.buttons || []).forEach((b, idx) => {
+        const card = document.createElement('div');
+        card.className = 'editor-button-card';
+
+        const btnPreview = document.createElement('div');
+        btnPreview.className = `editor-btn-preview ${b.color || 'default'}`;
+        btnPreview.innerHTML = `<span>${b.icon || '🔘'}</span><span>${b.label || 'BTN'}</span>`;
+        if (b.sub) btnPreview.innerHTML += `<span style="font-size: 8px; opacity: 0.6;">${b.sub}</span>`;
+        btnPreview.addEventListener('click', () => {
+          btnPreview.classList.toggle('active', b.toggle);
+          showToast(`Test Trigger: ${b.label}`);
+        });
+
+        const actions = document.createElement('div');
+        actions.className = 'editor-card-actions';
+
+        const leftBtn = document.createElement('button');
+        leftBtn.className = 'btn-mini-action';
+        leftBtn.textContent = '◀';
+        leftBtn.title = 'Move Left';
+        leftBtn.disabled = idx === 0;
+        leftBtn.addEventListener('click', () => {
+          const temp = deck.buttons[idx];
+          deck.buttons[idx] = deck.buttons[idx - 1];
+          deck.buttons[idx - 1] = temp;
+          renderStudioUI();
+          saveAllDecks();
+        });
+
+        const modeBadge = document.createElement('span');
+        modeBadge.style.fontSize = '9px';
+        modeBadge.style.color = b.toggle ? '#10b981' : '#38bdf8';
+        modeBadge.style.fontWeight = '800';
+        modeBadge.textContent = b.toggle ? 'TOGGLE' : 'MOMENT';
+
+        const rightBtn = document.createElement('button');
+        rightBtn.className = 'btn-mini-action';
+        rightBtn.textContent = '▶';
+        rightBtn.title = 'Move Right';
+        rightBtn.disabled = idx === deck.buttons.length - 1;
+        rightBtn.addEventListener('click', () => {
+          const temp = deck.buttons[idx];
+          deck.buttons[idx] = deck.buttons[idx + 1];
+          deck.buttons[idx + 1] = temp;
+          renderStudioUI();
+          saveAllDecks();
+        });
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn-mini-action';
+        delBtn.textContent = '🗑️';
+        delBtn.title = 'Delete Button';
+        delBtn.style.color = '#ef4444';
+        delBtn.addEventListener('click', () => {
+          deck.buttons.splice(idx, 1);
+          renderStudioUI();
+          saveAllDecks();
+        });
+
+        actions.appendChild(leftBtn);
+        actions.appendChild(modeBadge);
+        actions.appendChild(rightBtn);
+        actions.appendChild(delBtn);
+
+        card.appendChild(btnPreview);
+        card.appendChild(actions);
+        editorGrid.appendChild(card);
+      });
+    }
+
+    // 3. Live Phone Simulator Canvas
+    renderPhoneSimulator(deck);
+  }
+
+  // Live Phone Simulator Canvas & Pan Physics
+  let simPosX = 0;
+  let simPosY = 0;
+  let simScale = 1.0;
+  let simIsDragging = false;
+  let simStartX = 0;
+  let simStartY = 0;
+
+  function renderPhoneSimulator(deck) {
+    const simCanvas = document.getElementById('sim-canvas');
+    if (!simCanvas) return;
+    simCanvas.innerHTML = '';
+    const cols = deck.columns || 4;
+    simCanvas.style.gridTemplateColumns = `repeat(${cols}, 100px)`;
+
+    (deck.buttons || []).forEach(b => {
+      const btn = document.createElement('div');
+      btn.className = `truck-btn ${b.color || ''}`;
+      btn.style.minHeight = '46px';
+      btn.style.fontSize = '9px';
+      btn.innerHTML = `<span>${b.icon || '🔘'}</span>${b.label || 'BTN'}`;
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active', b.toggle);
+      });
+      simCanvas.appendChild(btn);
+    });
+
+    applySimTransform();
+  }
+
+  function applySimTransform() {
+    const simCanvas = document.getElementById('sim-canvas');
+    if (simCanvas) {
+      simCanvas.style.transform = `translate3d(${simPosX}px, ${simPosY}px, 0) scale(${simScale})`;
+    }
+  }
+
+  const simViewport = document.getElementById('sim-viewport');
+  if (simViewport) {
+    simViewport.addEventListener('pointerdown', (e) => {
+      simIsDragging = true;
+      simStartX = e.clientX - simPosX;
+      simStartY = e.clientY - simPosY;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!simIsDragging) return;
+      simPosX = e.clientX - simStartX;
+      simPosY = e.clientY - simStartY;
+      applySimTransform();
+    });
+    window.addEventListener('pointerup', () => { simIsDragging = false; });
+  }
+
+  document.getElementById('sim-btn-fit').addEventListener('click', () => {
+    const simCanvas = document.getElementById('sim-canvas');
+    if (!simCanvas || !simViewport) return;
+    const vw = simViewport.clientWidth;
+    const vh = simViewport.clientHeight;
+    const cw = simCanvas.scrollWidth || 300;
+    const ch = simCanvas.scrollHeight || 300;
+    simScale = Math.min((vw - 16) / cw, (vh - 16) / ch);
+    simPosX = (vw - cw * simScale) / 2;
+    simPosY = (vh - ch * simScale) / 2;
+    applySimTransform();
+  });
+
+  document.getElementById('sim-btn-reset').addEventListener('click', () => {
+    simScale = 1.0;
+    simPosX = 8;
+    simPosY = 8;
+    applySimTransform();
+  });
+
+  // Deck Management Event Handlers
+  document.getElementById('btn-add-deck').addEventListener('click', () => {
+    const name = prompt('Enter a name for the new custom button deck:', `Custom Deck ${customDecks.length + 1}`);
+    if (!name) return;
+    const newId = 'deck_' + Date.now().toString(36);
+    customDecks.push({
+      id: newId,
+      name: name,
+      columns: 4,
+      buttons: []
+    });
+    activeDeckId = newId;
+    renderStudioUI();
+    saveAllDecks();
+    showToast(`Created new deck: ${name}!`);
+  });
+
+  document.getElementById('btn-duplicate-deck').addEventListener('click', () => {
+    const current = getActiveDeck();
+    const copy = JSON.parse(JSON.stringify(current));
+    copy.id = 'deck_' + Date.now().toString(36);
+    copy.name = `${current.name} (Copy)`;
+    customDecks.push(copy);
+    activeDeckId = copy.id;
+    renderStudioUI();
+    saveAllDecks();
+    showToast(`Duplicated ${current.name}!`);
+  });
+
+  document.getElementById('btn-rename-deck').addEventListener('click', () => {
+    const current = getActiveDeck();
+    const newName = prompt('Rename deck:', current.name);
+    if (!newName) return;
+    current.name = newName;
+    renderStudioUI();
+    saveAllDecks();
+  });
+
+  document.getElementById('btn-delete-deck').addEventListener('click', () => {
+    if (customDecks.length <= 1) {
+      alert('You must have at least one button deck.');
+      return;
+    }
+    const current = getActiveDeck();
+    if (confirm(`Delete deck "${current.name}"?`)) {
+      customDecks = customDecks.filter(d => d.id !== current.id);
+      activeDeckId = customDecks[0].id;
+      renderStudioUI();
+      saveAllDecks();
+      showToast('Deck deleted.');
+    }
+  });
+
+  document.getElementById('sel-deck-columns').addEventListener('change', (e) => {
+    const deck = getActiveDeck();
+    deck.columns = parseInt(e.target.value, 10) || 4;
+    renderStudioUI();
+    saveAllDecks();
+  });
+
+  document.getElementById('sel-deck-template').addEventListener('change', (e) => {
+    const tplKey = e.target.value;
+    if (!tplKey || !PRESET_TEMPLATES[tplKey]) return;
+    if (confirm(`Load template "${PRESET_TEMPLATES[tplKey].name}"? This will populate the active deck buttons.`)) {
+      const deck = getActiveDeck();
+      const tpl = PRESET_TEMPLATES[tplKey];
+      deck.buttons = JSON.parse(JSON.stringify(tpl.buttons));
+      deck.columns = tpl.columns || 4;
+      renderStudioUI();
+      saveAllDecks();
+      showToast(`Loaded template ${tpl.name}!`);
+    }
+    e.target.value = '';
+  });
+
+  document.getElementById('btn-clear-deck').addEventListener('click', () => {
+    if (confirm('Clear all buttons in this deck?')) {
+      getActiveDeck().buttons = [];
+      renderStudioUI();
+      saveAllDecks();
+    }
+  });
+
+  // Export JSON
+  document.getElementById('btn-export-decks').addEventListener('click', () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(customDecks, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `mobicon_custom_decks_${Date.now()}.json`);
+    dlAnchor.click();
+    showToast('Exported decks to JSON file!');
+  });
+
+  // Import JSON
+  const fileImport = document.getElementById('file-import-decks');
+  document.getElementById('btn-import-decks').addEventListener('click', () => fileImport.click());
+  fileImport.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        if (Array.isArray(imported) && imported.length > 0) {
+          customDecks = imported;
+          activeDeckId = customDecks[0].id;
+          renderStudioUI();
+          saveAllDecks();
+          showToast('Successfully imported custom decks!');
+        } else {
+          alert('Invalid deck format in file.');
+        }
+      } catch (err) {
+        alert('Could not parse JSON file.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  function saveAllDecks() {
+    try {
+      localStorage.setItem('mobicon_custom_decks', JSON.stringify(customDecks));
+      localStorage.setItem('mobicon_active_deck', activeDeckId);
+    } catch (e) {}
+  }
+
+  document.getElementById('btn-save-decks-top').addEventListener('click', () => {
+    saveAllDecks();
+    saveConfig();
+    showToast('💾 All button decks saved! Ready to play on mobile controller.');
+  });
+
+  renderStudioUI();
+
+  // Save Config & Decks
+  function showToast(msg = 'Configuration saved successfully!') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 2500);
+  }
+
+  function saveConfig() {
+    try {
+      localStorage.setItem('mobicon_config', JSON.stringify(config));
+      saveAllDecks();
+    } catch (e) {}
+  }
+
+  document.getElementById('btn-save-config').addEventListener('click', () => {
+    saveConfig();
+    showToast('Saved settings! All mobile controllers will sync automatically.');
+  });
+
+  document.getElementById('btn-reset-defaults').addEventListener('click', () => {
+    if (confirm('Reset all steering, haptic, and deck settings to defaults?')) {
+      localStorage.removeItem('mobicon_config');
+      localStorage.removeItem('mobicon_custom_decks');
+      localStorage.removeItem('mobicon_active_deck');
+      location.reload();
+    }
+  });
+
+  // Copy URL
+  document.getElementById('btn-copy-url').addEventListener('click', () => {
+    if (lblPrimaryUrl) {
+      navigator.clipboard.writeText(lblPrimaryUrl.textContent).then(() => {
+        showToast('Copied controller URL to clipboard!');
+      }).catch(() => {});
+    }
+  });
+
+  // Fetch Server Status & Slots State from Backend
+  async function fetchServerStatus() {
+    try {
+      const res = await fetch('/api/status');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.primaryUrl && lblPrimaryUrl) {
+        lblPrimaryUrl.textContent = data.primaryUrl;
+      }
+      if (data.drivers) {
+        updateDriverSetupUI(data.drivers);
+      }
+      if (data.slots && data.slots.slots) {
+        updateSlotsUI(data.slots.slots);
+      }
+    } catch (e) {}
+  }
+
+  function addSetupButton(container, label, onClick, primary = true) {
+    const button = document.createElement('button');
+    button.className = primary ? 'btn-primary' : 'btn-secondary';
+    button.type = 'button';
+    button.textContent = label;
+    button.addEventListener('click', onClick);
+    container.appendChild(button);
+  }
+
+  async function runDriverSetupAction(url, successMessage) {
+    try {
+      const res = await fetch(url, { method: 'POST' });
+      const data = await res.json().catch(() => ({}));
+      showToast(data.result?.message || successMessage);
+      setTimeout(fetchServerStatus, 1500);
+    } catch (e) {
+      showToast('Driver setup action failed.');
+    }
+  }
+
+  function updateDriverSetupUI(drivers) {
+    const card = document.getElementById('driver-setup-card');
+    const copy = document.getElementById('driver-setup-copy');
+    const actions = document.getElementById('driver-setup-actions');
+    if (!card || !actions) return;
+
+    const missing = [drivers.vigem].filter(d => d && !d.installed);
+    if (missing.length === 0) {
+      card.style.display = 'none';
+      return;
+    }
+
+    card.style.display = 'block';
+    if (copy) {
+      const details = missing.map(d => d.detail).filter(Boolean).join(' ');
+      copy.textContent = details || 'ViGEmBus is required for Xbox, PlayStation, and steering controllers. Truckbox buttons use Windows keyboard simulation.';
+    }
+    actions.innerHTML = '';
+
+    if (missing.length > 0) {
+      addSetupButton(actions, 'Download & Install Missing', () => runDriverSetupAction('/api/drivers/install_missing', 'Driver installer launched.'));
+    }
+
+    missing.forEach(driver => {
+      const key = 'vigem';
+      addSetupButton(actions, `Install ${driver.name}`, () => runDriverSetupAction(`/api/drivers/install/${key}`, `${driver.name} installer launched.`), false);
+      const link = document.createElement('a');
+      link.className = 'btn-secondary';
+      link.href = driver.downloadUrl;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = `${driver.name} Releases`;
+      actions.appendChild(link);
+    });
+  }
+
+  function updateSlotsUI(slots) {
+    slots.forEach((s) => {
+      const card = document.getElementById(`slot-card-${s.slot}`);
+      const statusPill = document.getElementById(`slot-status-${s.slot}`);
+      const devName = document.getElementById(`slot-dev-${s.slot}`);
+      const devId = document.getElementById(`slot-id-${s.slot}`);
+      const kickBtn = card ? card.querySelector('.btn-slot-kick') : null;
+
+      if (!card || !statusPill) return;
+
+      if (s.locked) {
+        card.classList.add('locked');
+        statusPill.className = 'slot-status-pill busy';
+        statusPill.textContent = 'LOCKED (ACTIVE)';
+        devName.textContent = s.deviceName || 'Connected Device';
+        devId.textContent = `Owner ID: ${s.ownerId || 'N/A'}`;
+        if (kickBtn) kickBtn.disabled = false;
+      } else {
+        card.classList.remove('locked');
+        statusPill.className = 'slot-status-pill free';
+        statusPill.textContent = 'AVAILABLE';
+        devName.textContent = 'No Device Connected';
+        devId.textContent = 'Ready to Claim';
+        if (kickBtn) kickBtn.disabled = true;
+      }
+    });
+  }
+
+  // Handle Kick Button
+  document.querySelectorAll('.btn-slot-kick').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const slot = parseInt(btn.dataset.slot, 10);
+      try {
+        await fetch('/api/kick_slot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slot })
+        });
+        showToast(`Slot P${slot + 1} has been disconnected.`);
+        fetchServerStatus();
+      } catch (e) {}
+    });
+  });
+
+  document.getElementById('btn-refresh-slots').addEventListener('click', fetchServerStatus);
+  setInterval(fetchServerStatus, 2000);
+  fetchServerStatus();
+
+  // Real-time WebSocket connection for live telemetry visualizer
+  let ws = null;
+  function connectLiveMonitor() {
+    const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    ws = new WebSocket(`${proto}//${location.host}/ws`);
+
+    ws.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'slots_status') {
+          updateSlotsUI(msg.slots || []);
+        } else if (msg.type === 'telemetry') {
+          const selSlot = parseInt(document.getElementById('sel-vis-slot').value, 10);
+          if (msg.slot === selSlot) {
+            updateVisualizer(msg);
+          }
+        } else if (msg.type === 'telemetry_all' && Array.isArray(msg.telemetry)) {
+          const selSlot = parseInt(document.getElementById('sel-vis-slot').value, 10);
+          const selected = msg.telemetry.find(t => t.slot === selSlot);
+          if (selected) updateVisualizer(selected);
+        } else if (msg.v === 1) {
+          const selSlot = parseInt(document.getElementById('sel-vis-slot').value, 10);
+          if (msg.p === selSlot) updateVisualizer(msg);
+        }
+      } catch (err) {}
+    };
+
+    ws.onclose = () => {
+      setTimeout(connectLiveMonitor, 2000);
+    };
+  }
+  connectLiveMonitor();
+
+  // Update Visualizer
+  function updateVisualizer(p) {
+    const dotL = document.getElementById('vis-dot-l');
+    const lblLs = document.getElementById('vis-val-ls');
+    const wheelRim = document.getElementById('vis-wheel-rim');
+    const wheelDeg = document.getElementById('vis-wheel-deg');
+    const fillClutch = document.getElementById('vis-fill-clutch');
+    const fillBrake = document.getElementById('vis-fill-brake');
+    const fillGas = document.getElementById('vis-fill-gas');
+
+    const maxR = 36;
+    const lx = (p.lx || 0) * maxR;
+    const ly = -(p.ly || 0) * maxR;
+    if (dotL) dotL.style.transform = `translate(${lx}px, ${ly}px)`;
+    if (lblLs) lblLs.textContent = `X: ${(p.lx || 0).toFixed(2)} | Y: ${(p.ly || 0).toFixed(2)}`;
+
+    const deg = (p.lx || 0) * (config.maxSteeringDegrees / 2);
+    if (wheelRim) wheelRim.style.transform = `rotate(${deg}deg)`;
+    if (wheelDeg) wheelDeg.textContent = `${deg.toFixed(1)}°`;
+
+    if (fillClutch) fillClutch.style.height = `${(p.clutch || 0) * 100}%`;
+    if (fillBrake) fillBrake.style.height = `${(p.lt || 0) * 100}%`;
+    if (fillGas) fillGas.style.height = `${(p.rt || 0) * 100}%`;
+  }
+
+  // Shutdown & Exit Software Handler
+  const btnShutdown = document.getElementById('btn-shutdown-server');
+  if (btnShutdown) {
+    btnShutdown.addEventListener('click', async () => {
+      const confirmExit = confirm('Are you sure you want to stop mobicon receiver?\n\nThis will disconnect all virtual controllers and close the software.');
+      if (!confirmExit) return;
+
+      const overlay = document.getElementById('shutdown-overlay');
+      if (overlay) overlay.style.display = 'flex';
+
+      try {
+        await fetch('/api/shutdown', { method: 'POST' });
+      } catch (e) {}
+
+      setTimeout(() => {
+        try { window.close(); } catch (e) {}
+      }, 1200);
+    });
+  }
+})();
+</script>
+</body>
+</html>
